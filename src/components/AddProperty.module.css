@@ -1,0 +1,123 @@
+.addPropertyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 40px;
+  background-color: #fef8e7;
+  border-radius: 10px;
+  width: 90%;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  width: 98%;
+  margin-bottom: 20px;
+  background-color: #f2b333;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 10px;
+  color: white;
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px;
+  color: white;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+
+.errorMessage {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.successMessage {
+  color: green;
+  margin-bottom: 10px;
+}
+
+.formContainer input,
+.formContainer textarea {
+  width: 100%;
+  padding: 10px;
+  color: black;
+  resize: none;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: lightgray;
+}
+
+.formContainer input::placeholder {
+  color: gray;
+}
+
+.horizontalFields {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.horizontalFields input {
+  width: 31%;
+}
+
+.formButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancelButton,
+.publishButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 48%;
+  color: white;
+}
+
+.cancelButton {
+  background-color: #f28c8c;
+}
+
+.publishButton {
+  background-color: #f2b333;
+}
+
+.propertyImage {
+  width: 48%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.propertyImage img {
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
