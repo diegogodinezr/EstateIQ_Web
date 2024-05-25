@@ -1,33 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
+import { getProperties } from '../api/property'; // Importa la función para obtener propiedades
+
+interface Property {
+  _id: string; 
+  title: string;
+  price: number;
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  squaremeters: number;
+  description: string;
+  images: string[]; 
+}
 
 const PropertyListing = () => {
-  const properties = [
-    {
-      id: 1,
-      title: 'Casa de ensueño',
-      price: '$500,000',
-      location: 'Ciudad de México',
-      bedrooms: 3,
-      bathrooms: 2,
-      area: 150,
-      details: 'Hermosa casa con vista al mar',
-      image: 'https://via.placeholder.com/300x200',
-    },
-    {
-      id: 2,
-      title: 'Departamento moderno',
-      price: '$250,000',
-      location: 'Guadalajara',
-      bedrooms: 2,
-      bathrooms: 1,
-      area: 80,
-      details: 'Departamento recién remodelado en zona céntrica',
-      image: 'https://via.placeholder.com/300x200',
-    },
-    // Agrega más propiedades ficticias aquí
-  ];
+  const [properties, setProperties] = useState<Property[]>([]); // Estado para las propiedades
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getProperties(); 
+        setProperties(response.data as Property[]); // Actualiza el estado con los datos obtenidos
+      } catch (error) {
+        console.error('Error al obtener propiedades:', error);
+      }
+    };
+
+    fetchData(); // Llama a la función para obtener los datos al cargar el componente
+  }, []); // El segundo argumento del useEffect es un array de dependencias, en este caso, [] significa que solo se ejecuta una vez al cargar el componente
 
   return (
     <div className={styles.homeContainer}>
@@ -37,15 +39,15 @@ const PropertyListing = () => {
         </div>
         <div className={styles.propertiesGrid}>
           {properties.map((property) => (
-            <div className={styles.propertyCard} key={property.id}>
-              <img src={property.image} alt={property.title} />
+            <div className={styles.propertyCard} key={property._id}> {/* Utiliza el _id como clave */}
+              <img src={property.images[0]} alt={property.title} /> {/* Suponiendo que images es un array de URLs de imágenes */}
               <h3>{property.title}</h3>
-              <p>Precio: {property.price}</p>
+              <p>Precio: ${property.price}</p>
               <p>Ubicación: {property.location}</p>
               <p>Recámaras: {property.bedrooms}</p>
               <p>Baños: {property.bathrooms}</p>
-              <p>Metros cuadrados: {property.area}</p>
-              <p className={styles.propertyDetails}>{property.details}</p>
+              <p>Metros cuadrados: {property.squaremeters}</p>
+              <p className={styles.propertyDetails}>{property.description}</p>
             </div>
           ))}
         </div>

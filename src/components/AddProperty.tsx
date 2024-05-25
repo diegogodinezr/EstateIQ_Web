@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './AddProperty.module.css';
+import { addPropertyRequest } from '../api/property';
 
 const AddProperty: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    titulo: '',
-    precio: '',
-    ubicacion: '',
-    recamaras: 0,
-    banos: 0,
-    metros: 0,
-    detalles: '',
-    imagen: null as File | null,
+    title: '',
+    price: '',
+    location: '',
+    bedrooms: '',
+    bathrooms: '',
+    squaremeters: '',
+    description: '',
+    images: [] as File[], // Array para guardar las imágenes
   });
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
@@ -31,7 +32,8 @@ const AddProperty: React.FC = () => {
     const file = e.target.files?.[0];
 
     if (file) {
-      setFormData({ ...formData, imagen: file });
+      setFormData({ ...formData, images: [...formData.images, file] });
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
@@ -45,37 +47,50 @@ const AddProperty: React.FC = () => {
     setFormError('');
     setFormSuccess('');
 
-    if (formData.titulo.trim() === '') {
+    if (formData.title.trim() === '') {
       setFormError('El título es obligatorio');
       return;
     }
 
     const formDataToSend = new FormData();
-    for (const key in formData) {
-      if (formData.hasOwnProperty(key)) {
-        formDataToSend.append(key, (formData[key as keyof typeof formData] as any));
-      }
+
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('price', formData.price);
+    formDataToSend.append('location', formData.location);
+    formDataToSend.append('bedrooms', formData.bedrooms);
+    formDataToSend.append('bathrooms', formData.bathrooms);
+    formDataToSend.append('squaremeters', formData.squaremeters);
+    formDataToSend.append('description', formData.description);
+
+    for (const image of formData.images) {
+      formDataToSend.append('images', image, image.name);
     }
 
-    // Aquí simularías el envío de los datos a tu API (Reemplaza con tu lógica)
-    // try {
-    //   const response = await fetch('/api/propiedades', {
-    //     method: 'POST',
-    //     body: formDataToSend,
-    //   });
+    try {
+      const response = await addPropertyRequest(formDataToSend);
 
-    //   if (response.ok) {
-    //     setFormSuccess('¡Propiedad agregada con éxito!');
-    //     // ... limpiar formulario
-    //   } else {
-    //     setFormError('Hubo un error al agregar la propiedad'); 
-    //   }
-    // } catch (error) {
-    //   console.error('Error:', error);
-    //   setFormError('Hubo un error al agregar la propiedad');
-    // }
+      if (response.status === 200 || response.status === 201) {
+        setFormSuccess('¡Propiedad agregada con éxito!');
+        // Aquí puedes limpiar el formulario si lo deseas
+        setFormData({
+          title: '',
+          price: '',
+          location: '',
+          bedrooms: '',
+          bathrooms: '',
+          squaremeters: '',
+          description: '',
+          images: [],
+        });
+        setPreviewImage(null);
+      } else {
+        setFormError('Hubo un error al agregar la propiedad');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setFormError('Hubo un error al agregar la propiedad');
+    }
   };
-
   return (
     <div className={styles.addPropertyContainer}>
       <div className={styles.header}>
@@ -89,55 +104,55 @@ const AddProperty: React.FC = () => {
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <input
               type="text"
-              name="titulo"
+              name="title"
               placeholder="Titulo"
-              value={formData.titulo}
+              value={formData.title}
               onChange={handleChange}
             />
             <input
               type="text"
-              name="precio"
+              name="price"
               placeholder="Precio"
-              value={formData.precio}
+              value={formData.price}
               onChange={handleChange}
             />
             <input
               type="text"
-              name="ubicacion"
+              name="location"
               placeholder="Ubicación"
-              value={formData.ubicacion}
+              value={formData.location}
               onChange={handleChange}
             />
             <div className={styles.horizontalFields}>
               <input
                 type="number"
-                name="recamaras"
+                name="bedrooms"
                 placeholder="Recamaras"
-                value={formData.recamaras}
+                value={formData.bedrooms}
                 onChange={handleChange}
                 min="0"
               />
               <input
                 type="number"
-                name="banos"
+                name="bathrooms"
                 placeholder="Baños"
-                value={formData.banos}
+                value={formData.bathrooms}
                 onChange={handleChange}
                 min="0"
               />
               <input
                 type="number"
-                name="metros"
+                name="squaremeters"
                 placeholder="m²"
-                value={formData.metros}
+                value={formData.squaremeters}
                 onChange={handleChange}
                 min="0"
               />
             </div>
             <textarea
-              name="detalles"
+              name="description"
               placeholder="Detalles"
-              value={formData.detalles}
+              value={formData.description}
               onChange={handleChange}
             />
             <div>
