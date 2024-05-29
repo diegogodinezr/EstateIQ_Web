@@ -40,7 +40,13 @@ const PropertyListing = () => {
         <div className={styles.propertiesGrid}>
           {properties.map((property) => (
             <div className={styles.propertyCard} key={property._id}> {/* Utiliza el _id como clave */}
-              <img src={property.images[0]} alt={property.title} /> {/* Suponiendo que images es un array de URLs de imágenes */}
+              <img 
+                src={property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/200'} 
+                alt={property.title} 
+                onError={(error) => { 
+                  console.log(`Error al cargar la imagen: ${property.images[0]}`, error); 
+                }} 
+              /> {/* Suponiendo que images es un array de URLs de imágenes */}
               <h3>{property.title}</h3>
               <p>Precio: ${property.price}</p>
               <p>Ubicación: {property.location}</p>
