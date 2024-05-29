@@ -40,6 +40,7 @@ h1 {
   display: flex;
   width: 100%;
   justify-content: space-between;
+  flex-wrap: wrap; /* Permite que los elementos se envuelvan */
 }
 
 .formContainer {
@@ -121,4 +122,78 @@ h1 {
   max-width: 100%;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .formContainer,
+  .propertyImage {
+    width: 100%;
+  }
+
+  .horizontalFields {
+    flex-direction: column;
+  }
+
+  .horizontalFields input {
+    width: 100%;
+  }
+
+  .formButtons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cancelButton,
+  .publishButton {
+    width: 100%;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .backButton {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .addPropertyContainer {
+    padding: 20px;
+  }
+
+  .header {
+    padding: 5px;
+  }
+
+  .formContainer input,
+  .formContainer textarea {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .cancelButton,
+  .publishButton {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .backButton {
+    font-size: 20px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
 }
