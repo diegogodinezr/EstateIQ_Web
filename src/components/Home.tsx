@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './Home.module.css';
-import { getProperties } from '../api/property'; // Importa la función para obtener propiedades
+import { Home, DollarSign, MapPin, Bed, Bath, Square, Search } from 'lucide-react';
+import { getProperties } from '../api/property';
+import styles from './PropertyListing.module.css';
 
 interface Property {
-  _id: string; 
+  _id: string;
   title: string;
   price: number;
   location: string;
@@ -12,54 +13,154 @@ interface Property {
   bathrooms: number;
   squaremeters: number;
   description: string;
-  images: string[]; 
+  images: string[];
+  type: string;
+  propertyType: string;
 }
 
 const PropertyListing = () => {
-  const [properties, setProperties] = useState<Property[]>([]); // Estado para las propiedades
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [filter, setFilter] = useState<'all' | 'sale' | 'rent'>('all');
+  const [propertyType, setPropertyType] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
+  const [minPrice, setMinPrice] = useState<number | ''>('');
+  const [maxPrice, setMaxPrice] = useState<number | ''>('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getProperties(); 
-        setProperties(response.data as Property[]); // Actualiza el estado con los datos obtenidos
+        const response = await getProperties({
+          type: filter,
+          propertyType,
+          location,
+          minPrice,
+          maxPrice,
+        });
+        setProperties(response.data as Property[]);
       } catch (error) {
         console.error('Error al obtener propiedades:', error);
       }
     };
 
-    fetchData(); // Llama a la función para obtener los datos al cargar el componente
-  }, []); // El segundo argumento del useEffect es un array de dependencias, en este caso, [] significa que solo se ejecuta una vez al cargar el componente
+    fetchData();
+  }, [filter, propertyType, location, minPrice, maxPrice]);
 
   return (
-    <div className={styles.homeContainer}>
-      <div className={styles.propertyListingContainer}>
-        <div className={styles.header}>
-          <h1>EstateIQ</h1>
+    <div className={styles.container}>
+      <nav className={styles.navbar}>
+        <div className={styles.navbarContent}>
+          <h1 className={styles.title}>EstateIQ</h1>
+          <Link to="/add-property" className={styles.addPropertyButton}>
+            Agregar una propiedad
+          </Link>
         </div>
-        <div className={styles.propertiesGrid}>
+      </nav>
+
+      <div className={styles.content}>
+        <div className={styles.filters}>
+          <div className={styles.filterButtons}>
+            <button
+              className={`${styles.filterButton} ${filter === 'all' ? styles.active : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              Todas
+            </button>
+            <button
+              className={`${styles.filterButton} ${filter === 'sale' ? styles.active : ''}`}
+              onClick={() => setFilter('sale')}
+            >
+              En Venta
+            </button>
+            <button
+              className={`${styles.filterButton} ${filter === 'rent' ? styles.active : ''}`}
+              onClick={() => setFilter('rent')}
+            >
+              En Renta
+            </button>
+          </div>
+          <div className={styles.additionalFilters}>
+            <div className={styles.selectWrapper}>
+              <select
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
+                className={styles.select}
+              >
+                <option value="">Todos los tipos</option>
+                <option value="House">Casa</option>
+                <option value="Apartment">Apartamento</option>
+                <option value="Land">Terreno</option>
+                <option value="Commercial">Comercial</option>
+              </select>
+            </div>
+            <div className={styles.inputWrapper}>
+              <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                placeholder="Ubicación"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.inputWrapper}>
+              <DollarSign className={styles.inputIcon} />
+              <input
+                type="number"
+                placeholder="Precio Mínimo"
+                value={minPrice}
+                onChange={(e) => setMinPrice(Number(e.target.value) || '')}
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.inputWrapper}>
+              <DollarSign className={styles.inputIcon} />
+              <input
+                type="number"
+                placeholder="Precio Máximo"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value) || '')}
+                className={styles.input}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.propertyGrid}>
           {properties.map((property) => (
-            <div className={styles.propertyCard} key={property._id}> {/* Utiliza el _id como clave */}
+            <div key={property._id} className={styles.propertyCard}>
               <img 
-                src={property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/200'} 
-                alt={property.title} 
-                onError={(error) => { 
-                  console.log(`Error al cargar la imagen: ${property.images[0]}`, error); 
-                }} 
-              /> {/* Suponiendo que images es un array de URLs de imágenes */}
-              <h3>{property.title}</h3>
-              <p>Precio: ${property.price}</p>
-              <p>Ubicación: {property.location}</p>
-              <p>Recámaras: {property.bedrooms}</p>
-              <p>Baños: {property.bathrooms}</p>
-              <p>Metros cuadrados: {property.squaremeters}</p>
-              <p className={styles.propertyDetails}>{property.description}</p>
+                src={property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/400x200'}
+                alt={property.title}
+                className={styles.propertyImage}
+              />
+              <div className={styles.propertyContent}>
+                <h3 className={styles.propertyTitle}>{property.title}</h3>
+                <div className={styles.propertyPrice}>
+                  <DollarSign className={styles.icon} />
+                  <span>${property.price.toLocaleString()}</span>
+                </div>
+                <div className={styles.propertyLocation}>
+                  <MapPin className={styles.icon} />
+                  <span>{property.location}</span>
+                </div>
+                <div className={styles.propertyDetails}>
+                  <div className={styles.detailItem}>
+                    <Bed className={styles.icon} />
+                    <span>{property.bedrooms}</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <Bath className={styles.icon} />
+                    <span>{property.bathrooms}</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <Square className={styles.icon} />
+                    <span>{property.squaremeters} m²</span>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
-        <Link to="/add-property" className={styles.addPropertyButton}>
-          Agregar una propiedad
-        </Link>
       </div>
     </div>
   );

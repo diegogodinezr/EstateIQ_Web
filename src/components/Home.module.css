@@ -1,126 +1,166 @@
 .homeContainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.propertyListingContainer {
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 40px;
-  background-color: #fef8e7;
-  border-radius: 10px;
-  width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  max-width: 1200px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  box-sizing: border-box;
+  min-height: 100vh;
+  background-color: #f0f0f0;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 20px;
+.navbar {
   background-color: #f2b333;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar h1 {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.addPropertyButton {
+  background-color: white;
+  color: #f2b333;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.addPropertyButton:hover {
+  background-color: #fff8e6;
+}
+
+.filtersContainer {
+  padding: 2rem;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filterButton {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.filterButton:not(.activeFilter) {
+  background-color: white;
+  color: #f2b333;
+}
+
+.filterButton:hover, .activeFilter {
+  background-color: #f2b333;
+  color: white;
+}
+
+.additionalFilters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.inputField, .selectField {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 1rem;
 }
 
 .propertiesGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  width: 100%;
-}
-
-h1 {
-  margin: 0;
-  font-size: 24px;
-  color: white;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
 }
 
 .propertyCard {
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  text-align: center;
-  width: calc(33.33% - 20px); /* 3 columnas, ajustando el espacio del gap */
-  box-sizing: border-box;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.propertyCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .propertyCard img {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 8px;
 }
 
-.propertyCard h3 {
-  margin-top: 10px;
-  font-size: 18px;
-  color: black;
+.propertyContent {
+  padding: 1.5rem;
 }
 
-.propertyCard p {
-  margin: 5px 0;
+.propertyTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
   color: #333;
 }
 
-.propertyDetails {
+.propertyPrice {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f2b333;
+  margin-bottom: 0.5rem;
+}
+
+.propertyLocation {
   color: #666;
+  margin-bottom: 0.5rem;
 }
 
-.addPropertyButton {
-  background-color: #f2b333;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  margin-top: 20px;
+.propertyDetails {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+  margin-bottom: 0.5rem;
 }
 
-.addPropertyButton:hover {
-  background-color: #e0a828;
+.propertyDescription {
+  color: #666;
+  font-size: 0.875rem;
 }
 
 /* Media queries para responsividad */
-
-@media (max-width: 1200px) {
-  .propertyCard {
-    width: calc(50% - 20px); /* 2 columnas */
-  }
-}
-
 @media (max-width: 768px) {
-  .propertyCard {
-    width: 100%; /* 1 columna */
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .header h1 {
-    font-size: 20px; /* Ajuste del tamaño del texto */
-  }
-  
   .addPropertyButton {
-    width: 100%; /* Botón a ancho completo */
-    text-align: center; /* Alinear el texto del botón */
-  }
-}
-
-@media (max-width: 480px) {
-  .propertyListingContainer {
-    padding: 20px; /* Menos padding en pantallas pequeñas */
+    margin-top: 1rem;
   }
 
-  .propertyCard {
-    padding: 10px; /* Menos padding en cada tarjeta */
+  .filterButtons {
+    flex-direction: column;
+  }
+
+  .filterButton {
+    width: 100%;
+  }
+
+  .additionalFilters {
+    flex-direction: column;
+  }
+
+  .inputField, .selectField {
+    width: 100%;
   }
 }
