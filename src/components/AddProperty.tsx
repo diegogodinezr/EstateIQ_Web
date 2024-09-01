@@ -141,6 +141,7 @@ const AddProperty: React.FC = () => {
                 value={formData.location}
                 onChange={handleChange}
               />
+              
             </div>
             <div className={styles.inputGroup}>
               <Bed className={styles.inputIcon} />
