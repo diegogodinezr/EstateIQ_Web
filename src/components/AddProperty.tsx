@@ -69,8 +69,9 @@ const AddProperty: React.FC = () => {
       }
     });
 
-    formData.images.forEach((image, index) => {
-      formDataToSend.append(`image${index}`, image);
+    // Cambiar a 'images' en lugar de 'images[index]'
+    formData.images.forEach((image) => {
+      formDataToSend.append('images', image); // Añade todas las imágenes con el nombre 'images'
     });
 
     try {
