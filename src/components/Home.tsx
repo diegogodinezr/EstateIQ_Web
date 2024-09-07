@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, DollarSign, MapPin, Bed, Bath, Square, Search } from 'lucide-react';
+import { Home, DollarSign, MapPin, Bed, Bath, Square, Search, X } from 'lucide-react'; // Agregué el icono de cierre (X)
 import { getProperties } from '../api/property';
 import styles from './PropertyListing.module.css';
 
@@ -25,6 +25,7 @@ const PropertyListing = () => {
   const [location, setLocation] = useState<string>('');
   const [minPrice, setMinPrice] = useState<number | ''>('');
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null); // Estado para la propiedad seleccionada
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +45,14 @@ const PropertyListing = () => {
 
     fetchData();
   }, [filter, propertyType, location, minPrice, maxPrice]);
+
+  const openModal = (property: Property) => {
+    setSelectedProperty(property);
+  };
+
+  const closeModal = () => {
+    setSelectedProperty(null);
+  };
 
   return (
     <div className={styles.container}>
@@ -127,7 +136,7 @@ const PropertyListing = () => {
 
         <div className={styles.propertyGrid}>
           {properties.map((property) => (
-            <div key={property._id} className={styles.propertyCard}>
+            <div key={property._id} className={styles.propertyCard} onClick={() => openModal(property)}>
               <img 
                 src={property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/400x200'}
                 alt={property.title}
@@ -162,6 +171,46 @@ const PropertyListing = () => {
           ))}
         </div>
       </div>
+
+      {/* Modal */}
+      {selectedProperty && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <button className={styles.closeButton} onClick={closeModal}>
+              <X size={24} />
+            </button>
+            <h2 className={styles.modalTitle}>{selectedProperty.title}</h2>
+            <img 
+              src={selectedProperty.images.length > 0 ? selectedProperty.images[0] : 'https://via.placeholder.com/400x200'}
+              alt={selectedProperty.title}
+              className={styles.modalImage}
+            />
+            <p className={styles.modalDescription}>{selectedProperty.description}</p>
+            <div className={styles.modalDetails}>
+              <div className={styles.modalDetailItem}>
+                <DollarSign className={styles.icon} />
+                <span>${selectedProperty.price.toLocaleString()}</span>
+              </div>
+              <div className={styles.modalDetailItem}>
+                <MapPin className={styles.icon} />
+                <span>{selectedProperty.location}</span>
+              </div>
+              <div className={styles.modalDetailItem}>
+                <Bed className={styles.icon} />
+                <span>{selectedProperty.bedrooms} habitaciones</span>
+              </div>
+              <div className={styles.modalDetailItem}>
+                <Bath className={styles.icon} />
+                <span>{selectedProperty.bathrooms} baños</span>
+              </div>
+              <div className={styles.modalDetailItem}>
+                <Square className={styles.icon} />
+                <span>{selectedProperty.squaremeters} m²</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
