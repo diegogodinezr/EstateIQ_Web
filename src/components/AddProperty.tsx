@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, DollarSign, MapPin, Bed, Bath, Square, Type, Image as ImageIcon, FileText, X } from 'lucide-react';
+import { Home, DollarSign, MapPin, Bed, Bath, Square, Type, Image as ImageIcon, FileText, X, Phone } from 'lucide-react';
 import styles from './AddProperty.module.css';
 import { addPropertyRequest } from '../api/property';
 
@@ -16,6 +16,8 @@ const AddProperty: React.FC = () => {
     description: '',
     type: 'sale',
     propertyType: 'House',
+    contactNumber: '',
+    isFeatured: false,
     images: [] as File[],
   });
   const [formError, setFormError] = useState('');
@@ -27,8 +29,11 @@ const AddProperty: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value,
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,13 +70,12 @@ const AddProperty: React.FC = () => {
     const formDataToSend = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (key !== 'images') {
-        formDataToSend.append(key, value);
+        formDataToSend.append(key, value.toString());
       }
     });
 
-    // Cambiar a 'images' en lugar de 'images[index]'
     formData.images.forEach((image) => {
-      formDataToSend.append('images', image); // Añade todas las imágenes con el nombre 'images'
+      formDataToSend.append('images', image);
     });
 
     try {
@@ -89,6 +93,8 @@ const AddProperty: React.FC = () => {
           description: '',
           type: 'sale',
           propertyType: 'House',
+          contactNumber: '',
+          isFeatured: false,
           images: [],
         });
         setPreviewImages([]);
@@ -141,7 +147,6 @@ const AddProperty: React.FC = () => {
                 value={formData.location}
                 onChange={handleChange}
               />
-              
             </div>
             <div className={styles.inputGroup}>
               <Bed className={styles.inputIcon} />
@@ -200,7 +205,31 @@ const AddProperty: React.FC = () => {
                 <option value="Commercial">Comercial</option>
               </select>
             </div>
+            <div className={styles.inputGroup}>
+              <Phone className={styles.inputIcon} />
+              <input
+                type="text"
+                name="contactNumber"
+                placeholder="Número de contacto"
+                value={formData.contactNumber}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.checkboxGroup}>
+              <input
+                type="checkbox"
+                id="isFeatured"
+                name="isFeatured"
+                checked={formData.isFeatured}
+                onChange={handleChange}
+                className={styles.checkboxInput}
+              />
+              <label htmlFor="isFeatured" className={styles.checkboxLabel}>
+                Destacar esta propiedad
+              </label>
+            </div>
           </div>
+
           <div className={styles.inputGroup}>
             <FileText className={styles.inputIcon} />
             <textarea
