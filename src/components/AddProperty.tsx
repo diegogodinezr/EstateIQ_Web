@@ -215,7 +215,7 @@ const AddProperty: React.FC = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className={styles.checkboxGroup}>
+            {/* <div className={styles.checkboxGroup}>
               <input
                 type="checkbox"
                 id="isFeatured"
@@ -227,7 +227,7 @@ const AddProperty: React.FC = () => {
               <label htmlFor="isFeatured" className={styles.checkboxLabel}>
                 Destacar esta propiedad
               </label>
-            </div>
+            </div> */}
           </div>
 
           <div className={styles.inputGroup}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, DollarSign, MapPin, Bed, Bath, Square, Search, X } from 'lucide-react'; // Agregué el icono de cierre (X)
+import { Home, DollarSign, MapPin, Bed, Bath, Square, Search, X, Phone } from 'lucide-react'; // Importa el icono de teléfono
 import { getProperties } from '../api/property';
 import styles from './PropertyListing.module.css';
 
@@ -16,6 +16,7 @@ interface Property {
   images: string[];
   type: string;
   propertyType: string;
+  contactNumber: string; // Nuevo campo de número de contacto
 }
 
 const PropertyListing = () => {
@@ -206,6 +207,11 @@ const PropertyListing = () => {
               <div className={styles.modalDetailItem}>
                 <Square className={styles.icon} />
                 <span>{selectedProperty.squaremeters} m²</span>
+              </div>
+              {/* Mostrar número de contacto con el icono de teléfono */}
+              <div className={styles.modalDetailItem}>
+                <Phone className={styles.icon} />
+                <span>Contacto: {selectedProperty.contactNumber}</span>
               </div>
             </div>
           </div>
