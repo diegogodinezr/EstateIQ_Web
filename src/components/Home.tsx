@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Home, DollarSign, MapPin, Bed, Bath, Square, Search, X, Phone } from 'lucide-react'; // Importa el icono de teléfono
+import { Link, useNavigate } from 'react-router-dom'; // Importa useNavigate para la navegación
+import { Home, DollarSign, MapPin, Bed, Bath, Square, Search, X, Phone } from 'lucide-react';
 import { getProperties } from '../api/property';
 import styles from './PropertyListing.module.css';
 
@@ -16,7 +16,7 @@ interface Property {
   images: string[];
   type: string;
   propertyType: string;
-  contactNumber: string; // Nuevo campo de número de contacto
+  contactNumber: string;
 }
 
 const PropertyListing = () => {
@@ -26,9 +26,18 @@ const PropertyListing = () => {
   const [location, setLocation] = useState<string>('');
   const [minPrice, setMinPrice] = useState<number | ''>('');
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null); // Estado para la propiedad seleccionada
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para saber si el usuario está autenticado
+
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Verifica si el token está en localStorage
+    const token = localStorage.getItem('authToken'); // Cambia 'authToken' por el nombre que uses para el token
+    if (token) {
+      setIsLoggedIn(true); // Si hay un token, el usuario está autenticado
+    }
+
     const fetchData = async () => {
       try {
         const response = await getProperties({
@@ -55,18 +64,45 @@ const PropertyListing = () => {
     setSelectedProperty(null);
   };
 
+  // Maneja el click del botón "Agregar propiedades"
+  const handleAddPropertyClick = () => {
+    if (isLoggedIn) {
+      // Si el usuario está autenticado, redirigir al formulario de agregar propiedad
+      navigate('/add-property');
+    } else {
+      // Si el usuario no está autenticado, redirigir a la página de login
+      navigate('/login');
+    }
+  };
+
+  // Maneja el cierre de sesión
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // Elimina el token de autenticación del localStorage
+    setIsLoggedIn(false); // Cambia el estado del usuario a no autenticado
+    navigate('/'); 
+  };
+
   return (
     <div className={styles.container}>
       <nav className={styles.navbar}>
         <div className={styles.navbarContent}>
           <h1 className={styles.title}>EstateIQ</h1>
-          <Link to="/add-property" className={styles.addPropertyButton}>
+          {/* Botón de "Agregar una propiedad" con la lógica de autenticación */}
+          <button onClick={handleAddPropertyClick} className={styles.addPropertyButton}>
             Agregar una propiedad
-          </Link>
+          </button>
+          
+          {/* Mostrar botón de "Cerrar sesión" si el usuario está autenticado */}
+          {isLoggedIn && (
+            <button onClick={handleLogout} className={styles.logoutButton}>
+              Cerrar sesión
+            </button>
+          )}
         </div>
       </nav>
 
       <div className={styles.content}>
+        {/* Resto del código de tu dashboard */}
         <div className={styles.filters}>
           <div className={styles.filterButtons}>
             <button
@@ -198,20 +234,19 @@ const PropertyListing = () => {
               </div>
               <div className={styles.modalDetailItem}>
                 <Bed className={styles.icon} />
-                <span>{selectedProperty.bedrooms} habitaciones</span>
+                <span>{selectedProperty.bedrooms}</span>
               </div>
               <div className={styles.modalDetailItem}>
                 <Bath className={styles.icon} />
-                <span>{selectedProperty.bathrooms} baños</span>
+                <span>{selectedProperty.bathrooms}</span>
               </div>
               <div className={styles.modalDetailItem}>
                 <Square className={styles.icon} />
                 <span>{selectedProperty.squaremeters} m²</span>
               </div>
-              {/* Mostrar número de contacto con el icono de teléfono */}
               <div className={styles.modalDetailItem}>
                 <Phone className={styles.icon} />
-                <span>Contacto: {selectedProperty.contactNumber}</span>
+                <span>{selectedProperty.contactNumber}</span>
               </div>
             </div>
           </div>
