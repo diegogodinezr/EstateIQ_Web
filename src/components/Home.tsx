@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Importa useNavigate para la navegación
-import { Home, DollarSign, MapPin, Bed, Bath, Square, Search, X, Phone } from 'lucide-react';
+import { DollarSign, MapPin, Bed, Bath, Square, X, Phone } from 'lucide-react';
 import { getProperties } from '../api/property';
 import styles from './PropertyListing.module.css';
 

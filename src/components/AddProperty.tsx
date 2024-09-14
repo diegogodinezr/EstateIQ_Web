@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, DollarSign, MapPin, Bed, Bath, Square, Type, Image as ImageIcon, FileText, X, Phone } from 'lucide-react';
+import {DollarSign, MapPin, Bed, Bath, Square, Type, Image as ImageIcon, FileText, X, Phone } from 'lucide-react';
 import styles from './AddProperty.module.css';
 import { addPropertyRequest } from '../api/property';
 
@@ -23,6 +23,14 @@ const AddProperty: React.FC = () => {
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+
+  // Verificar si el usuario está autenticado
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      navigate('/login');  // Redirigir al login si no está autenticado
+    }
+  }, [navigate]);
 
   const handleCancel = () => {
     navigate('/');
