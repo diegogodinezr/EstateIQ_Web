@@ -7,20 +7,27 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Estado para el mensaje de éxito
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError('');
+    setSuccessMessage(''); // Reinicia el mensaje de éxito
 
     try {
       const response = await loginUser({ email, password });
 
       // Almacena el token en localStorage (asegúrate de que el backend devuelva un token)
-      localStorage.setItem('authToken', response.data.token); // Ajusta esto según el nombre del token que recibas
+      localStorage.setItem('authToken', response.data.token); 
 
-      alert('Inicio de sesión exitoso!');
-      navigate('/add-property'); // Redirige al dashboard
+      // Muestra el mensaje de éxito
+      setSuccessMessage('Inicio de sesión exitoso!');
+      
+      // Redirige después de 2 segundos
+      setTimeout(() => {
+        navigate('/add-property');
+      }, 2000); // Redirige después de 2 segundos
     } catch (err) {
       setError('Error al iniciar sesión. Intente nuevamente.');
     }
@@ -31,6 +38,7 @@ const Login = () => {
       <div className={styles.formWrapper}>
         <h2 className={styles.title}>Iniciar Sesión</h2>
         {error && <p className={styles.errorMessage}>{error}</p>}
+        {successMessage && <p className={styles.successMessage}>{successMessage}</p>} {/* Muestra el mensaje de éxito */}
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputGroup}>
             <label className={styles.label}>Email:</label>

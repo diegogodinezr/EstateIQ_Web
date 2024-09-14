@@ -22,13 +22,20 @@
     font-weight: bold;
     color: #333; /* Color del texto para mantener consistencia */
   }
-  
-  .errorMessage {
+  .successMessage {
+    color: green;
+    font-size: 1.2rem;
+    margin-top: 10px;
+    text-align: center; /* Alinea el texto al centro */
+    font-weight: bold; /* Hace que el mensaje sea más llamativo */
+}
+
+.errorMessage {
     color: red;
     text-align: center;
     margin-bottom: 1rem;
-  }
-  
+    font-weight: bold; /* Para consistencia con el mensaje de éxito */
+}
   .form {
     display: flex;
     flex-direction: column;
