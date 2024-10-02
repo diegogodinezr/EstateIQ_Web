@@ -30,6 +30,27 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+.profileButton {
+  background-color: #ffffff; /* Fondo blanco */
+  color: #f2b333; /* Color de texto oscuro para contraste */
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid #f2b333; /* Borde dorado suave */
+  margin-left: 20px; /* Añadir espacio a la izquierda */
+}
+
+.profileButton:hover {
+  background-color: #fff8e6; /* Fondo ligeramente dorado al hacer hover */
+  color: #f2b333; /* Cambiar el texto a dorado */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
 
 .navbarContent {
   max-width: 1200px;

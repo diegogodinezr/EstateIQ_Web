@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = 'http://localhost:3000/api';
+const API = 'https://estate-iq-backend.vercel.app/api';
 
 // Configurar axios para incluir cookies automáticamente en las solicitudes
 axios.defaults.withCredentials = true;
@@ -12,12 +12,12 @@ export const addPropertyRequest = async (formData: FormData) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      withCredentials: true, // Asegúrate de incluir esto para enviar cookies
+      withCredentials: true,
     });
     return response; // Devuelve la respuesta del backend
   } catch (error) {
     console.error('Error al agregar propiedad:', error);
-    throw error; // Propaga el error para que pueda ser manejado por el frontend
+    throw error;
   }
 };
 
@@ -31,7 +31,7 @@ export const getProperties = async (filters: {
 }) => {
   try {
     const { type, propertyType, location, minPrice, maxPrice } = filters;
-    
+
     const params: any = {};
     if (type && type !== 'all') params.type = type;
     if (propertyType) params.propertyType = propertyType;
@@ -41,12 +41,41 @@ export const getProperties = async (filters: {
 
     const response = await axios.get(`${API}/properties`, {
       params,
-      withCredentials: true, // Asegúrate de incluir esto para enviar cookies
+      withCredentials: true,
     });
-    return response; // Devuelve la respuesta del backend
+    return response;
   } catch (error) {
     console.error('Error al obtener propiedades:', error);
-    throw error; // Propaga el error para que pueda ser manejado por el frontend
+    throw error;
+  }
+};
+
+// Función para eliminar una propiedad por ID
+export const deleteProperty = async (propertyId: string) => {
+  try {
+    const response = await axios.delete(`${API}/properties/${propertyId}`, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (error) {
+    console.error('Error al eliminar propiedad:', error);
+    throw error;
+  }
+};
+
+// Función para modificar una propiedad por ID
+export const updateProperty = async (propertyId: string, formData: FormData) => {
+  try {
+    const response = await axios.put(`${API}/properties/${propertyId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true,
+    });
+    return response;
+  } catch (error) {
+    console.error('Error al modificar propiedad:', error);
+    throw error;
   }
 };
 
@@ -54,12 +83,12 @@ export const getProperties = async (filters: {
 export const registerUser = async (userData: { email: string; password: string }) => {
   try {
     const response = await axios.post(`${API}/register`, userData, {
-      withCredentials: true, // Asegúrate de incluir esto para enviar cookies
+      withCredentials: true,
     });
-    return response; // Devuelve la respuesta del backend
+    return response;
   } catch (error) {
     console.error('Error al registrar usuario:', error);
-    throw error; // Propaga el error para que pueda ser manejado por el frontend
+    throw error;
   }
 };
 
@@ -67,12 +96,12 @@ export const registerUser = async (userData: { email: string; password: string }
 export const loginUser = async (userData: { email: string; password: string }) => {
   try {
     const response = await axios.post(`${API}/login`, userData, {
-      withCredentials: true, // Asegúrate de incluir esto para enviar cookies
+      withCredentials: true,
     });
-    return response; // Devuelve la respuesta del backend
+    return response;
   } catch (error) {
     console.error('Error al iniciar sesión del usuario:', error);
-    throw error; // Propaga el error para que pueda ser manejado por el frontend
+    throw error;
   }
 };
 
@@ -80,24 +109,50 @@ export const loginUser = async (userData: { email: string; password: string }) =
 export const logoutUser = async () => {
   try {
     const response = await axios.post(`${API}/logout`, {
-      withCredentials: true, // Asegúrate de incluir esto para enviar cookies
+      withCredentials: true,
     });
-    return response; // Devuelve la respuesta del backend
+    return response;
   } catch (error) {
     console.error('Error al cerrar sesión del usuario:', error);
-    throw error; // Propaga el error para que pueda ser manejado por el frontend
+    throw error;
   }
 };
 
-// Función para obtener el perfil del usuario
+// Función para obtener el perfil del usuario (incluye el rol)
 export const getProfile = async () => {
   try {
     const response = await axios.get(`${API}/profile`, {
-      withCredentials: true, // Asegúrate de incluir esto para enviar cookies
+      withCredentials: true,
     });
-    return response; // Devuelve la respuesta del backend
+    return response;
   } catch (error) {
     console.error('Error al obtener el perfil del usuario:', error);
-    throw error; // Propaga el error para que pueda ser manejado por el frontend
+    throw error;
+  }
+};
+
+// Función para obtener las estadísticas generales para administradores
+export const getAdminStatistics = async () => {
+  try {
+    const response = await axios.get(`${API}/admin/statistics`, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (error) {
+    console.error('Error al obtener estadísticas del administrador:', error);
+    throw error;
+  }
+};
+
+// Función para obtener estadísticas detalladas (como propiedades más solicitadas)
+export const getDetailedStatistics = async () => {
+  try {
+    const response = await axios.get(`${API}/admin/detailed-statistics`, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (error) {
+    console.error('Error al obtener estadísticas detalladas:', error);
+    throw error;
   }
 };
