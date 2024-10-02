@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Importa useNavigate para la navegación
+import { useState, useEffect } from 'react'; // Eliminamos la importación de React si no se usa JSX directamente
+import { useNavigate } from 'react-router-dom'; // Puedes mantener esta línea si la usas
 import { DollarSign, MapPin, Bed, Bath, Square, X, Phone } from 'lucide-react';
 import { getProperties } from '../api/property';
 import styles from './PropertyListing.module.css';
+
 
 interface Property {
   _id: string;
