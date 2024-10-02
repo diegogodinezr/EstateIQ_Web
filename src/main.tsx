@@ -1,17 +1,17 @@
 import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import AddProperty from './components/AddProperty';
 import Register from './components/Register';
 import Login from './components/Login';
-import Profile from './components/Profile';  // Asumimos que tienes un componente Profile
+import Profile from './components/Profile';
 import './index.css';
 
 // Lógica real de autenticación
 const isAuthenticated = () => {
-  const token = localStorage.getItem('authToken');  // Aquí almacenamos el token después del login
-  return token !== null && token !== '';  // Verifica si el token existe y no está vacío
+  const token = localStorage.getItem('authToken');  
+  return token !== null && token !== '';  
 };
 
 // Componente para proteger rutas privadas
@@ -24,7 +24,7 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   return isAuthenticated() ? (
     children
   ) : (
-    <Navigate to="/login" state={{ from: location }} />  // Pasa toda la ubicación, no solo `pathname`
+    <Navigate to="/login" state={{ from: location }} />
   );
 }
 
