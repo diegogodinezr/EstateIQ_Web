@@ -20,10 +20,9 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "src",
     "paths": {
-      "@/*": [
-        "*"
-      ]
-    }
+      "@/*": ["*"]
+    },
+    "types": ["@testing-library/jest-dom"]  // Agregado para incluir los tipos
   },
   "include": ["src", "src/setupTests.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
