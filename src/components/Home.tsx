@@ -64,24 +64,25 @@ const PropertyListing = () => {
     setSelectedProperty(null);
   };
 
-// Dashboard Principal
-const handleAddPropertyClick = () => {
-  if (isLoggedIn) {
-    navigate('/add-property');
-  } else {
-    localStorage.setItem('redirectAfterLogin', '/add-property'); // Guardar la ruta deseada
-    navigate('/login');
-  }
-};
+  // Dashboard Principal
+  const handleAddPropertyClick = () => {
+    if (isLoggedIn) {
+      navigate('/add-property');
+    } else {
+      localStorage.setItem('redirectAfterLogin', '/add-property'); // Guardar la ruta deseada
+      navigate('/login');
+    }
+  };
 
-const handleProfile = () => {
-  if (isLoggedIn) {
-    navigate('/profile');
-  } else {
-    localStorage.setItem('redirectAfterLogin', '/profile'); // Guardar la ruta deseada
-    navigate('/login');
-  }
-};
+  const handleProfile = () => {
+    if (isLoggedIn) {
+      navigate('/profile');
+    } else {
+      localStorage.setItem('redirectAfterLogin', '/profile'); // Guardar la ruta deseada
+      navigate('/login');
+    }
+  };
+
   // Maneja el cierre de sesión
   const handleLogout = () => {
     localStorage.removeItem('authToken'); // Elimina el token de autenticación del localStorage
@@ -99,11 +100,10 @@ const handleProfile = () => {
             Agregar una propiedad
           </button>
 
-          {/* Mostrar botón de "Cerrar sesión" si el usuario está autenticado */}
-            <button onClick={handleProfile} className={styles.profileButton}>
-              Perfil
-            </button>
-          
+          {/* Mostrar botón de "Perfil" */}
+          <button onClick={handleProfile} className={styles.profileButton}>
+            Perfil
+          </button>
 
           {/* Mostrar botón de "Cerrar sesión" si el usuario está autenticado */}
           {isLoggedIn && (
@@ -257,10 +257,11 @@ const handleProfile = () => {
                 <Square className={styles.icon} />
                 <span>{selectedProperty.squaremeters} m²</span>
               </div>
-              <div className={styles.modalDetailItem}>
-                <Phone className={styles.icon} />
-                <span>{selectedProperty.contactNumber}</span>
-              </div>
+            </div>
+            <div className={styles.modalContact}>
+              <h3>Contacto</h3>
+              <Phone className={styles.icon} />
+              <span>{selectedProperty.contactNumber}</span>
             </div>
           </div>
         </div>

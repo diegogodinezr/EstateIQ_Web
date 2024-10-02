@@ -3,12 +3,12 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import PropertyListing from './Home'; // Asegúrate de que la ruta sea correcta
 import AddProperty from './AddProperty'; // Asegúrate de que la ruta sea correcta
 import { getProperties, addPropertyRequest } from '../api/property';
-import { vi } from 'vitest';
+import { vi } from 'vitest'; // Asegúrate de que Vitest esté correctamente instalado y configurado
 
 // Mockea las funciones getProperties y addPropertyRequest
 vi.mock('../api/property');
-const mockGetProperties = getProperties as vi.MockedFunction<typeof getProperties>;
-const mockAddPropertyRequest = addPropertyRequest as vi.MockedFunction<typeof addPropertyRequest>;
+const mockGetProperties = getProperties as jest.MockedFunction<typeof getProperties>;
+const mockAddPropertyRequest = addPropertyRequest as jest.MockedFunction<typeof addPropertyRequest>;
 
 const mockProperties = [
   {
@@ -125,7 +125,7 @@ describe('AddProperty Component', () => {
     await waitFor(() => {
       // Verificar que addPropertyRequest haya sido llamada correctamente
       expect(mockAddPropertyRequest).toHaveBeenCalledTimes(1);
-      const formData = (mockAddPropertyRequest as vi.Mock).mock.calls[0][0] as FormData;
+      const formData = (mockAddPropertyRequest as jest.Mock).mock.calls[0][0] as FormData;
       expect(formData.get('title')).toBe('Casa Bonita');
       expect(formData.get('price')).toBe('500000');
       expect(formData.get('location')).toBe('Ciudad');
@@ -140,6 +140,7 @@ describe('AddProperty Component', () => {
     expect(screen.getByText('¡Propiedad agregada con éxito!')).toBeInTheDocument();
   });
 });
+
 
 describe('AddProperty Component', () => {
   beforeEach(() => {

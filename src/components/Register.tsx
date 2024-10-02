@@ -17,7 +17,7 @@ const Register = () => {
 
     try {
       // Llama a la función de API para registrar el usuario
-      const response = await registerUser({ email, password });
+      await registerUser({ email, password }); // Eliminada la variable response
 
       // Muestra el mensaje de éxito
       setSuccessMessage('Usuario registrado exitosamente!');
