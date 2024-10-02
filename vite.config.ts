@@ -4,12 +4,12 @@ import { configDefaults } from 'vitest/config'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/EstateIQ_Web/', // Configura el base path para GitHub Pages
+  base: './',  // Cambia el base path a './'
   plugins: [react()],
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000', // Reemplaza con la URL de tu servidor back-end
+        target: 'http://localhost:3000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
