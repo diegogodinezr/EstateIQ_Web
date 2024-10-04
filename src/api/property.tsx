@@ -1,26 +1,58 @@
-//archivo para conectarse al backend
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
-//const API = 'https://estate-iq-backend.vercel.app/api';
-const API = 'http://localhost:3000/api';
+// Types
+interface UserData {
+  email: string;
+  password: string;
+}
 
-// Configurar axios para incluir cookies automáticamente en las solicitudes
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost:3000/api';
-const getToken = () => {
-  return localStorage.getItem('authToken'); // Obtén el token de autenticación
+interface PropertyFilters {
+  type?: 'all' | 'sale' | 'rent';
+  propertyType?: string;
+  location?: string;
+  minPrice?: number | '';
+  maxPrice?: number | '';
+}
+
+// API Configuration
+const API = 'https://estate-iq-backend.vercel.app/api';
+// const API = 'http://localhost:3000/api';
+
+axios.defaults.baseURL = API;
+
+// Función para obtener el token
+const getToken = (): string | null => {
+  return localStorage.getItem('authToken');
 };
 
-// Función para agregar una propiedad
-export const addPropertyRequest = async (formData: FormData) => {
-  const token = getToken();
+// Función para configurar el token en el header
+const setAuthHeader = (token: string | null): void => {
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
+};
+
+// Interceptor para manejar errores de autenticación
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('authToken');
+      setAuthHeader(null);
+      window.dispatchEvent(new CustomEvent('logout'));
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const addPropertyRequest = async (formData: FormData): Promise<AxiosResponse> => {
   try {
     const response = await axios.post(`${API}/properties`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`, // Agrega el token al header
-      },
-      withCredentials: true,
+      }
     });
     return response;
   } catch (error) {
@@ -29,17 +61,10 @@ export const addPropertyRequest = async (formData: FormData) => {
   }
 };
 
-// Función para obtener propiedades con filtros opcionales
-export const getProperties = async (filters: {
-  type?: 'all' | 'sale' | 'rent';
-  propertyType?: string;
-  location?: string;
-  minPrice?: number | '';
-  maxPrice?: number | '';
-}) => {
+export const getProperties = async (filters: PropertyFilters): Promise<AxiosResponse> => {
   try {
     const { type, propertyType, location, minPrice, maxPrice } = filters;
-
+    
     const params: any = {};
     if (type && type !== 'all') params.type = type;
     if (propertyType) params.propertyType = propertyType;
@@ -55,16 +80,9 @@ export const getProperties = async (filters: {
   }
 };
 
-// Función para eliminar una propiedad
-export const deleteProperty = async (propertyId: string) => {
-  const token = getToken();
+export const deleteProperty = async (propertyId: string): Promise<AxiosResponse> => {
   try {
-    const response = await axios.delete(`${API}/properties/${propertyId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`, // Agrega el token al header
-      },
-      withCredentials: true,
-    });
+    const response = await axios.delete(`${API}/properties/${propertyId}`);
     return response;
   } catch (error) {
     console.error('Error al eliminar propiedad:', error);
@@ -72,16 +90,12 @@ export const deleteProperty = async (propertyId: string) => {
   }
 };
 
-// Función para modificar una propiedad
-export const updateProperty = async (propertyId: string, formData: FormData) => {
-  const token = getToken();
+export const updateProperty = async (propertyId: string, formData: FormData): Promise<AxiosResponse> => {
   try {
     const response = await axios.put(`${API}/properties/${propertyId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`, // Agrega el token al header
-      },
-      withCredentials: true,
+      }
     });
     return response;
   } catch (error) {
@@ -90,12 +104,13 @@ export const updateProperty = async (propertyId: string, formData: FormData) => 
   }
 };
 
-// Función para registrar un usuario
-export const registerUser = async (userData: { email: string; password: string }) => {
+export const registerUser = async (userData: UserData): Promise<AxiosResponse> => {
   try {
-    const response = await axios.post(`${API}/register`, userData, {
-      withCredentials: true,
-    });
+    const response = await axios.post(`${API}/register`, userData);
+    if (response.data.token) {
+      localStorage.setItem('authToken', response.data.token);
+      setAuthHeader(response.data.token);
+    }
     return response;
   } catch (error) {
     console.error('Error al registrar usuario:', error);
@@ -103,12 +118,13 @@ export const registerUser = async (userData: { email: string; password: string }
   }
 };
 
-// Función para iniciar sesión
-export const loginUser = async (userData: { email: string; password: string }) => {
+export const loginUser = async (userData: UserData): Promise<AxiosResponse> => {
   try {
-    const response = await axios.post(`${API}/login`, userData, {
-      withCredentials: true,
-    });
+    const response = await axios.post(`${API}/login`, userData);
+    if (response.data.token) {
+      localStorage.setItem('authToken', response.data.token);
+      setAuthHeader(response.data.token);
+    }
     return response;
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
@@ -116,57 +132,34 @@ export const loginUser = async (userData: { email: string; password: string }) =
   }
 };
 
-// Función para cerrar sesión
-export const logoutUser = async () => {
+export const logoutUser = async (): Promise<void> => {
   try {
-    const response = await axios.post(`${API}/logout`, {
-      withCredentials: true,
-    });
-    return response;
-  } catch (error) {
-    console.error('Error al cerrar sesión:', error);
-    throw error;
+    await axios.post(`${API}/logout`);
+  } finally {
+    localStorage.removeItem('authToken');
+    setAuthHeader(null);
   }
 };
 
-// Función para obtener el perfil del usuario
-export const getProfile = async () => {
+export const getProfile = async (): Promise<AxiosResponse | null> => {
   const token = getToken();
   if (!token) {
     console.error('No se encontró el token de autenticación.');
-    return null; // Si no hay token, evita hacer la solicitud
+    return null;
   }
 
   try {
-    const response = await axios.get(`${API}/profile`, {
-      headers: {
-        'Authorization': `Bearer ${token}`, // Agrega el token al header
-      },
-      withCredentials: true,
-    });
-
-    if (response.status === 200 && response.data) {
-      return response.data; // Asegúrate de devolver los datos completos
-    } else {
-      console.error('Error inesperado en la respuesta:', response);
-      return null;
-    }
+    const response = await axios.get(`${API}/profile`);
+    return response;
   } catch (error) {
     console.error('Error al obtener perfil del usuario:', error);
     throw error;
   }
 };
 
-// Función para obtener estadísticas de admin
-export const getAdminStatistics = async () => {
-  const token = getToken();
+export const getAdminStatistics = async (): Promise<AxiosResponse> => {
   try {
-    const response = await axios.get(`${API}/statistics`, {
-      headers: {
-        'Authorization': `Bearer ${token}`, // Agrega el token al header
-      },
-      withCredentials: true,
-    });
+    const response = await axios.get(`${API}/statistics`);
     return response;
   } catch (error) {
     console.error('Error al obtener estadísticas:', error);
@@ -174,19 +167,18 @@ export const getAdminStatistics = async () => {
   }
 };
 
-// Función para obtener estadísticas detalladas
-export const getDetailedStatistics = async () => {
-  const token = getToken();
+export const getDetailedStatistics = async (): Promise<AxiosResponse> => {
   try {
-    const response = await axios.get(`${API}/detailed-statistics`, {
-      headers: {
-        'Authorization': `Bearer ${token}`, // Agrega el token al header
-      },
-      withCredentials: true,
-    });
+    const response = await axios.get(`${API}/detailed-statistics`);
     return response;
   } catch (error) {
     console.error('Error al obtener estadísticas detalladas:', error);
     throw error;
   }
 };
+
+// Inicializar el token si existe en localStorage cuando se carga la aplicación
+const token = getToken();
+if (token) {
+  setAuthHeader(token);
+}

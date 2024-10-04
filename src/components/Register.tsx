@@ -1,34 +1,44 @@
+// Register.tsx
 import React, { useState } from 'react';
 import { registerUser } from '../api/property';
 import { useNavigate } from 'react-router-dom';
-import styles from './Register.module.css'; // Importa los estilos CSS
+import styles from './Register.module.css';
+
+interface RegisterResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+  };
+}
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Estado para mensaje de éxito
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError('');
-    setSuccessMessage(''); // Reinicia el mensaje de éxito
+    setSuccessMessage('');
 
     try {
-      // Llama a la función de API para registrar el usuario
-      await registerUser({ email, password }); // Eliminada la variable response
+      const response = await registerUser({ email, password });
+      const data = response.data as RegisterResponse;
 
-      // Muestra el mensaje de éxito
-      setSuccessMessage('Usuario registrado exitosamente!');
-      
-      // Redirige después de 2 segundos
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000); // Ajusta la redirección según tu necesidad
+      if (data.token) {
+        setSuccessMessage('¡Usuario registrado exitosamente!');
+        
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        setError('Error en el registro');
+      }
     } catch (err: any) {
-      setError('Error al registrar el usuario. Intente nuevamente.');
-      console.error(err.response?.data?.message || 'Error desconocido');
+      setError(err.response?.data?.message || 'Error al registrar el usuario. Intente nuevamente.');
     }
   };
 
@@ -59,7 +69,9 @@ const Register = () => {
               required
             />
           </div>
-          <button type="submit" className={styles.registerButton}>Registrar</button>
+          <button type="submit" className={styles.registerButton}>
+            Registrar
+          </button>
         </form>
       </div>
     </div>
