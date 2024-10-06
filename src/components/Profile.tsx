@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DollarSign, MapPin, Bed, Bath, Square, X, Phone, ArrowLeft, Home, Building2, Landmark, Store } from 'lucide-react';
+import { MapPin, Bed, Bath, Square, X, Phone, ArrowLeft, Home, Building2, Landmark, Store } from 'lucide-react';
 import { getProfile } from '../api/property';
 import styles from './Profile.module.css';
 
@@ -128,7 +128,12 @@ const UserProfile = () => {
           <div className={styles.propertyGrid}>
             {userData.properties.map((property) => (
               <div key={property._id} className={styles.propertyCard} onClick={() => openModal(property)}>
-                <div className={styles.propertyBadges}>
+                <div className={styles.propertyImageContainer}>
+                <img 
+                    src={property.images?.length > 0 ? property.images[0] : 'https://via.placeholder.com/400x200'}
+                    alt={property.title}
+                    className={styles.propertyImage}
+                  />
                   <span className={`${styles.typeBadge} ${styles[property.type]}`}>
                     {property.type === 'sale' ? 'Venta' : 'Renta'}
                   </span>
@@ -136,19 +141,12 @@ const UserProfile = () => {
                     <span className={styles.featuredBadge}>Destacado</span>
                   )}
                 </div>
-                <img 
-                  src={property.images?.length > 0 ? property.images[0] : 'https://via.placeholder.com/400x200'}
-                  alt={property.title}
-                  className={styles.propertyImage}
-                />
                 <div className={styles.propertyContent}>
                   <div className={styles.propertyTypeHeader}>
                     <PropertyTypeIcon type={property.propertyType} />
-                    
+                    <h3 className={styles.propertyTitle}>{property.title}</h3>
                   </div>
-                  <h3 className={styles.propertyTitle}>{property.title}</h3>
                   <div className={styles.propertyPrice}>
-                    <DollarSign className={styles.icon} />
                     <span>${property.price.toLocaleString()}</span>
                     {property.type === 'rent' && <span className={styles.rentPeriod}>/mes</span>}
                   </div>
@@ -198,10 +196,11 @@ const UserProfile = () => {
             <div className={styles.modalHeader}>
               <div className={styles.modalTitleSection}>
                 <div className={styles.modalTypeInfo}>
-                  <PropertyTypeIcon type={selectedProperty.propertyType} />
                   <span className={`${styles.typeBadge} ${styles[selectedProperty.type]}`}>
                     {selectedProperty.type === 'sale' ? 'Venta' : 'Renta'}
                   </span>
+                  <br />
+                  <PropertyTypeIcon type={selectedProperty.propertyType} />
                 </div>
                 <h2 className={styles.modalTitle}>{selectedProperty.title}</h2>
               </div>

@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'; // Eliminamos la importación de React si no se usa JSX directamente
-import { useNavigate } from 'react-router-dom'; // Puedes mantener esta línea si la usas
-import { DollarSign, MapPin, Bed, Bath, Square, X, Phone } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { DollarSign, MapPin, Bed, Bath, Square, X, Phone, Home, Building2, Landmark, Store } from 'lucide-react';
 import { getProperties } from '../api/property';
 import styles from './PropertyListing.module.css';
-
 
 interface Property {
   _id: string;
@@ -15,10 +14,25 @@ interface Property {
   squaremeters: number;
   description: string;
   images: string[];
-  type: string;
-  propertyType: string;
+  type: 'sale' | 'rent';
+  propertyType: 'House' | 'Apartment' | 'Land' | 'Commercial';
   contactNumber: string;
 }
+
+const PropertyTypeIcon = ({ type }: { type: Property['propertyType'] }) => {
+  switch (type) {
+    case 'House':
+      return <Home className={styles.typeIcon} />;
+    case 'Apartment':
+      return <Building2 className={styles.typeIcon} />;
+    case 'Land':
+      return <Landmark className={styles.typeIcon} />;
+    case 'Commercial':
+      return <Store className={styles.typeIcon} />;
+    default:
+      return <Home className={styles.typeIcon} />;
+  }
+};
 
 const PropertyListing = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -28,15 +42,14 @@ const PropertyListing = () => {
   const [minPrice, setMinPrice] = useState<number | ''>('');
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para saber si el usuario está autenticado
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Verifica si el token está en localStorage
-    const token = localStorage.getItem('authToken'); // Cambia 'authToken' por el nombre que uses para el token
+    const token = localStorage.getItem('authToken');
     if (token) {
-      setIsLoggedIn(true); // Si hay un token, el usuario está autenticado
+      setIsLoggedIn(true);
     }
 
     const fetchData = async () => {
@@ -65,12 +78,11 @@ const PropertyListing = () => {
     setSelectedProperty(null);
   };
 
-  // Dashboard Principal
   const handleAddPropertyClick = () => {
     if (isLoggedIn) {
       navigate('/add-property');
     } else {
-      localStorage.setItem('redirectAfterLogin', '/add-property'); // Guardar la ruta deseada
+      localStorage.setItem('redirectAfterLogin', '/add-property');
       navigate('/login');
     }
   };
@@ -79,16 +91,15 @@ const PropertyListing = () => {
     if (isLoggedIn) {
       navigate('/profile');
     } else {
-      localStorage.setItem('redirectAfterLogin', '/profile'); // Guardar la ruta deseada
+      localStorage.setItem('redirectAfterLogin', '/profile');
       navigate('/login');
     }
   };
 
-  // Maneja el cierre de sesión
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); // Elimina el token de autenticación del localStorage
-    setIsLoggedIn(false); // Cambia el estado del usuario a no autenticado
-    navigate('/'); 
+    localStorage.removeItem('authToken');
+    setIsLoggedIn(false);
+    navigate('/');
   };
 
   return (
@@ -96,17 +107,12 @@ const PropertyListing = () => {
       <nav className={styles.navbar}>
         <div className={styles.navbarContent}>
           <h1 className={styles.title}>EstateIQ</h1>
-          {/* Botón de "Agregar una propiedad" con la lógica de autenticación */}
           <button onClick={handleAddPropertyClick} className={styles.addPropertyButton}>
             Agregar una propiedad
           </button>
-
-          {/* Mostrar botón de "Perfil" */}
           <button onClick={handleProfile} className={styles.profileButton}>
             Perfil
           </button>
-
-          {/* Mostrar botón de "Cerrar sesión" si el usuario está autenticado */}
           {isLoggedIn && (
             <button onClick={handleLogout} className={styles.logoutButton}>
               Cerrar sesión
@@ -114,6 +120,7 @@ const PropertyListing = () => {
           )}
         </div>
       </nav>
+
 
       <div className={styles.content}>
         {/* Resto del código de tu dashboard */}
@@ -188,34 +195,42 @@ const PropertyListing = () => {
         <div className={styles.propertyGrid}>
           {properties.map((property) => (
             <div key={property._id} className={styles.propertyCard} onClick={() => openModal(property)}>
-              <img 
-                src={property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/400x200'}
-                alt={property.title}
-                className={styles.propertyImage}
-              />
-              <div className={styles.propertyContent}>
-                <h3 className={styles.propertyTitle}>{property.title}</h3>
-                <div className={styles.propertyPrice}>
-                  <DollarSign className={styles.icon} />
-                  <span>${property.price.toLocaleString()}</span>
+             <div className={styles.propertyImageContainer}>
+                <img 
+                    src={property.images?.length > 0 ? property.images[0] : 'https://via.placeholder.com/400x200'}
+                    alt={property.title}
+                    className={styles.propertyImage}
+                  />
+                  <span className={`${styles.typeBadge} ${styles[property.type]}`}>
+                    {property.type === 'sale' ? 'Venta' : 'Renta'}
+                  </span>
                 </div>
-                <div className={styles.propertyLocation}>
-                  <MapPin className={styles.icon} />
-                  <span>{property.location}</span>
-                </div>
-                <div className={styles.propertyDetails}>
-                  <div className={styles.detailItem}>
-                    <Bed className={styles.icon} />
-                    <span>{property.bedrooms}</span>
+                <div className={styles.propertyContent}>
+                  <div className={styles.propertyTypeHeader}>
+                    <PropertyTypeIcon type={property.propertyType} />
+                    <h3 className={styles.propertyTitle}>{property.title}</h3>
                   </div>
-                  <div className={styles.detailItem}>
-                    <Bath className={styles.icon} />
-                    <span>{property.bathrooms}</span>
+                  <div className={styles.propertyPrice}>
+                    <span>${property.price.toLocaleString()}</span>
+                    {property.type === 'rent' && <span className={styles.rentPeriod}>/mes</span>}
                   </div>
-                  <div className={styles.detailItem}>
-                    <Square className={styles.icon} />
-                    <span>{property.squaremeters} m²</span>
+                  <div className={styles.propertyLocation}>
+                    <MapPin className={styles.icon} />
+                    <span>{property.location}</span>
                   </div>
+                  <div className={styles.propertyDetails}>
+                    <div className={styles.detailItem}>
+                      <Bed className={styles.icon} />
+                      <span>{property.bedrooms}</span>
+                    </div>
+                    <div className={styles.detailItem}>
+                      <Bath className={styles.icon} />
+                      <span>{property.bathrooms}</span>
+                    </div>
+                    <div className={styles.detailItem}>
+                      <Square className={styles.icon} />
+                      <span>{property.squaremeters} m²</span>
+                    </div>
                 </div>
               </div>
             </div>
@@ -223,46 +238,76 @@ const PropertyListing = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {selectedProperty && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <button className={styles.closeButton} onClick={closeModal}>
-              <X size={24} />
-            </button>
-            <h2 className={styles.modalTitle}>{selectedProperty.title}</h2>
-            <img 
-              src={selectedProperty.images.length > 0 ? selectedProperty.images[0] : 'https://via.placeholder.com/400x200'}
-              alt={selectedProperty.title}
-              className={styles.modalImage}
-            />
-            <p className={styles.modalDescription}>{selectedProperty.description}</p>
-            <div className={styles.modalDetails}>
-              <div className={styles.modalDetailItem}>
-                <DollarSign className={styles.icon} />
-                <span>${selectedProperty.price.toLocaleString()}</span>
-              </div>
-              <div className={styles.modalDetailItem}>
-                <MapPin className={styles.icon} />
-                <span>{selectedProperty.location}</span>
-              </div>
-              <div className={styles.modalDetailItem}>
-                <Bed className={styles.icon} />
-                <span>{selectedProperty.bedrooms}</span>
-              </div>
-              <div className={styles.modalDetailItem}>
-                <Bath className={styles.icon} />
-                <span>{selectedProperty.bathrooms}</span>
-              </div>
-              <div className={styles.modalDetailItem}>
-                <Square className={styles.icon} />
-                <span>{selectedProperty.squaremeters} m²</span>
-              </div>
-            </div>
-            <div className={styles.modalContact}>
-              <h3>Contacto</h3>
-              <Phone className={styles.icon} />
-              <span>{selectedProperty.contactNumber}</span>
+    <div className={styles.modalOverlay} onClick={closeModal}>
+    <div className={styles.modal} onClick={e => e.stopPropagation()}>
+      <button className={styles.closeButton} onClick={closeModal}>
+        <X size={24} />
+      </button>
+      
+      <div className={styles.modalHeader}>
+        <div className={styles.modalTitleSection}>
+          <div className={styles.modalTypeInfo}>
+            <span className={`${styles.typeBadge} ${styles[selectedProperty.type]}`}>
+              {selectedProperty.type === 'sale' ? 'Venta' : 'Renta'}
+            </span>
+            <br />
+            <PropertyTypeIcon type={selectedProperty.propertyType} />
+          </div>
+          <h2 className={styles.modalTitle}>{selectedProperty.title}</h2>
+        </div>
+        
+        <div className={styles.modalPriceSection}>
+          <span className={styles.modalPrice}>
+            ${selectedProperty.price.toLocaleString()}
+            {selectedProperty.type === 'rent' && <span className={styles.rentPeriod}>/mes</span>}
+          </span>
+        </div>
+      </div>
+
+      <div className={styles.modalImageSection}>
+        <img 
+          src={selectedProperty.images?.length > 0 ? selectedProperty.images[0] : 'https://via.placeholder.com/400x200'}
+          alt={selectedProperty.title}
+          className={styles.modalImage}
+        />
+      </div>
+
+      <div className={styles.modalMainInfo}>
+        <div className={styles.modalLocation}>
+          <MapPin className={styles.icon} />
+          <span>{selectedProperty.location}</span>
+        </div>
+        
+        <div className={styles.modalKeyDetails}>
+          <div className={styles.modalDetailItem}>
+            <Bed className={styles.icon} />
+            <span>{selectedProperty.bedrooms} Habitaciones</span>
+          </div>
+          <div className={styles.modalDetailItem}>
+            <Bath className={styles.icon} />
+            <span>{selectedProperty.bathrooms} Baños</span>
+          </div>
+          <div className={styles.modalDetailItem}>
+            <Square className={styles.icon} />
+            <span>{selectedProperty.squaremeters} m²</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.modalDescription}>
+        <h3>Descripción</h3>
+        <p>{selectedProperty.description}</p>
+      </div>
+
+      <div className={styles.modalFooter}>
+        <div className={styles.modalContact}>
+          <h3>Información de Contacto</h3>
+          <div className={styles.contactInfo}>
+            <Phone className={styles.icon} />
+            <span>{selectedProperty.contactNumber}</span>
+          </div>
+        </div>
             </div>
           </div>
         </div>

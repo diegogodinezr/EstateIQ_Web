@@ -196,41 +196,53 @@
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
+.propertyImageContainer {
+  position: relative;
+}
 .propertyImage {
   width: 100%;
   height: 200px;
   object-fit: cover;
 }
 
+.propertyTypeHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
 .propertyContent {
   padding: 1.5rem;
 }
 
 .propertyTitle {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: #333;
-}
-
-.propertyPrice,
-.propertyLocation,
-.detailItem {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
+font-size: 1.2rem;
+font-weight: 700;
+color: #333;
+margin: 0;
 }
 
 .propertyPrice {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #f2b333;
+display: flex;
+align-items: center;
+font-size: 1.4rem;
+font-weight: 700;
+color: #f2b333;
+margin-bottom: 0.5rem;
+}
+.icon {
+width: 1.25rem;
+height: 1.25rem;
+margin-right: 0.5rem;
+color: #999;
 }
 
-.propertyLocation,
-.propertyDetails {
-  color: #666;
+.propertyLocation {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.9rem;
+  color: #777;
 }
 
 .propertyDetails {
@@ -239,12 +251,54 @@
   margin-top: 1rem;
 }
 
-.icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-right: 0.5rem;
-  color: #999;
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: #555;
 }
+
+.propertyBadges {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+
+.typeBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(242, 179, 51, 0.9);
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.featuredBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 204, 0, 0.9);
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.propertyFooter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #777;
+}
+
 
 @media (max-width: 768px) {
   .filterButtons,
@@ -266,57 +320,124 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
 .modal {
   background-color: white;
+  width: 600px;
+  max-width: 100%;
   border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
-  max-width: 500px;
-  width: 90%;
   position: relative;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .closeButton {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: none;
+  background-color: transparent;
   border: none;
   cursor: pointer;
 }
 
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .modalTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.modalPrice {
   font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #f2b333;
 }
 
 .modalImage {
   width: 100%;
-  height: auto;
-  margin-bottom: 1rem;
+  height: 300px;
+  object-fit: cover;
+  margin-top: 1rem;
+  border-radius: 10px;
 }
 
-.modalDescription {
-  margin-bottom: 1rem;
+.modalMainInfo {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.modalLocation {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1rem;
   color: #555;
 }
 
-.modalDetails {
+.modalKeyDetails {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .modalDetailItem {
   display: flex;
   align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.modalDescription {
+  margin-top: 1rem;
+}
+
+.modalDescription h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.modalDescription p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.modalContact {
+  font-size: 1rem;
+  color: #555;
+}
+
+.contactInfo {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
   color: #333;
+}
+@media (max-width: 768px) {
+  .modal {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .modalImage {
+    height: 200px;
+  }
 }
