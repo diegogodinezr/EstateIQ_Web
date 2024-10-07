@@ -10,48 +10,6 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.logoutButton {
-  background-color: #f2545b; /* Un color rojo suave para destacar */
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 9999px; /* Mantener el estilo redondeado */
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: none;
-  margin-left: 20px; /* Separarlo un poco del botón de agregar */
-}
-
-.logoutButton:hover {
-  background-color: #d43d4a; /* Un color más oscuro al hacer hover */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.profileButton {
-  background-color: #ffffff; /* Fondo blanco */
-  color: #f2b333; /* Color de texto oscuro para contraste */
-  padding: 0.6rem 1.2rem;
-  border-radius: 9999px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: 2px solid #f2b333; /* Borde dorado suave */
-  margin-left: 20px; /* Añadir espacio a la izquierda */
-}
-
-.profileButton:hover {
-  background-color: #fff8e6; /* Fondo ligeramente dorado al hacer hover */
-  color: #f2b333; /* Cambiar el texto a dorado */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-
 .navbarContent {
   max-width: 1200px;
   margin: 0 auto;
@@ -59,6 +17,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .title {
@@ -79,10 +39,53 @@
   font-weight: 600;
   font-size: 0.9rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
 }
 
 .addPropertyButton:hover {
   background-color: #fff8e6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.profileButton {
+  background-color: #ffffff;
+  color: #f2b333;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid #f2b333;
+  cursor: pointer;
+}
+
+.profileButton:hover {
+  background-color: #fff8e6;
+  color: #f2b333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logoutButton {
+  background-color: #f2545b;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  background-color: #d43d4a;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -94,13 +97,14 @@
 }
 
 .filters {
-  margin-bottom: 2rem;
+  margin: 2rem 0;
 }
 
 .filterButtons {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 .filterButton {
@@ -125,16 +129,16 @@
 }
 
 .additionalFilters {
-  display: flex;
-  gap: 5rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  width: 100%;
 }
 
 .selectWrapper,
 .inputWrapper {
-  flex: 1;
-  min-width: 200px;
   position: relative;
+  width: 100%;
 }
 
 .select,
@@ -154,6 +158,7 @@
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1em;
+  padding-right: 2.5rem;
 }
 
 .inputIcon {
@@ -179,8 +184,9 @@
 
 .propertyGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
 }
 
 .propertyCard {
@@ -189,6 +195,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .propertyCard:hover {
@@ -199,10 +206,15 @@
 .propertyImageContainer {
   position: relative;
 }
+
 .propertyImage {
   width: 100%;
   height: 200px;
   object-fit: cover;
+}
+
+.propertyContent {
+  padding: 1.5rem;
 }
 
 .propertyTypeHeader {
@@ -211,30 +223,32 @@
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
-.propertyContent {
-  padding: 1.5rem;
+
+.typeIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #999;
 }
 
 .propertyTitle {
-font-size: 1.2rem;
-font-weight: 700;
-color: #333;
-margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
 }
 
 .propertyPrice {
-display: flex;
-align-items: center;
-font-size: 1.4rem;
-font-weight: 700;
-color: #f2b333;
-margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 700;
+  color: #f2b333;
+  margin-bottom: 0.5rem;
 }
-.icon {
-width: 1.25rem;
-height: 1.25rem;
-margin-right: 0.5rem;
-color: #999;
+
+.rentPeriod {
+  font-size: 0.8em;
+  margin-left: 0.25rem;
 }
 
 .propertyLocation {
@@ -249,6 +263,8 @@ color: #999;
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .detailItem {
@@ -259,10 +275,10 @@ color: #999;
   color: #555;
 }
 
-.propertyBadges {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem;
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #999;
 }
 
 .typeBadge {
@@ -273,45 +289,11 @@ color: #999;
   color: white;
   padding: 0.3rem 0.7rem;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.75rem);
   font-weight: 600;
 }
 
-.featuredBadge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(255, 204, 0, 0.9);
-  color: white;
-  padding: 0.3rem 0.7rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.propertyFooter {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
-  font-size: 0.9rem;
-  color: #777;
-}
-
-
-@media (max-width: 768px) {
-  .filterButtons,
-  .additionalFilters {
-    flex-direction: column;
-  }
-
-  .filterButton,
-  .selectWrapper,
-  .inputWrapper {
-    width: 100%;
-  }
-}
+/* Modal Styles */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -327,12 +309,15 @@ color: #999;
 
 .modal {
   background-color: white;
-  width: 600px;
-  max-width: 100%;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+  padding: 1.5rem;
   position: relative;
+  margin: 1rem;
 }
 
 .closeButton {
@@ -342,29 +327,41 @@ color: #999;
   background-color: transparent;
   border: none;
   cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  transform: scale(1.1);
 }
 
 .modalHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .modalTitle {
-  font-size: 1.8rem;
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
   font-weight: 700;
   color: #333;
 }
 
 .modalPrice {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   font-weight: 600;
   color: #f2b333;
+  white-space: nowrap;
+  margin-right: 2.5rem;
 }
 
 .modalImage {
   width: 100%;
-  height: 300px;
+  height: clamp(200px, 40vh, 300px);
   object-fit: cover;
   margin-top: 1rem;
   border-radius: 10px;
@@ -374,6 +371,8 @@ color: #999;
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .modalLocation {
@@ -387,6 +386,7 @@ color: #999;
 .modalKeyDetails {
   display: flex;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .modalDetailItem {
@@ -405,18 +405,23 @@ color: #999;
   font-size: 1.2rem;
   font-weight: 600;
   color: #333;
+  margin-bottom: 0.5rem;
 }
 
 .modalDescription p {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #555;
-  line-height: 1.5;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .modalFooter {
   display: flex;
   justify-content: space-between;
   margin-top: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .modalContact {
@@ -431,13 +436,85 @@ color: #999;
   font-size: 1rem;
   color: #333;
 }
+
+/* Responsive Media Queries */
 @media (max-width: 768px) {
-  .modal {
-    width: 90%;
-    padding: 1.5rem;
+  .navbarContent {
+    flex-direction: column;
+    text-align: center;
   }
 
-  .modalImage {
-    height: 200px;
+  .title {
+    margin-bottom: 0.5rem;
+  }
+
+  .addPropertyButton,
+  .profileButton,
+  .logoutButton {
+    width: 100%;
+    max-width: 300px;
+    margin: 0.5rem 0;
+  }
+
+  .modalHeader {
+    flex-direction: column;
+  }
+
+  .modalMainInfo {
+    flex-direction: column;
+  }
+
+  .modalKeyDetails {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .input,
+  .select {
+    font-size: 16px;
+    padding: 0.8rem 1rem;
+  }
+
+  .filterButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .propertyContent {
+    padding: 1rem;
+  }
+
+  .propertyGrid {
+    padding: 0.5rem;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .propertyContent {
+    padding: 0.75rem;
+  }
+
+  .modal {
+    padding: 1rem;
+  }
+
+  .modalTitle {
+    font-size: 1.2rem;
+  }
+}
+
+/* Active States for Touch Devices */
+@media (hover: none) {
+  .propertyCard:active {
+    transform: scale(0.98);
+  }
+
+  .filterButton:active,
+  .addPropertyButton:active,
+  .profileButton:active,
+  .logoutButton:active {
+    transform: scale(0.98);
   }
 }
