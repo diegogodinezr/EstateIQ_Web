@@ -182,3 +182,12 @@ const token = getToken();
 if (token) {
   setAuthHeader(token);
 }
+export const incrementPropertyViews = async (propertyId: string): Promise<AxiosResponse> => {
+  try {
+    const response = await axios.get(`${API}/properties/${propertyId}`);
+    return response;
+  } catch (error) {
+    console.error('Error al incrementar vistas de la propiedad:', error);
+    throw error;
+  }
+};
