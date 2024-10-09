@@ -51,7 +51,6 @@ const UserProfile = () => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null); // Estado para el modal de eliminación
   const [filter, setFilter] = useState<'active' | 'deleted'>('active'); // Estado del filtro
-  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -97,7 +96,6 @@ const UserProfile = () => {
   
   const closeModal = () => {
     setSelectedProperty(null);
-    setIsEditing(false);
   };
 
   const handleLogout = () => {
