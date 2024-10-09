@@ -80,9 +80,11 @@ export const getProperties = async (filters: PropertyFilters): Promise<AxiosResp
   }
 };
 
-export const deleteProperty = async (propertyId: string): Promise<AxiosResponse> => {
+export const deleteProperty = async (propertyId: string, deleteReason: string): Promise<AxiosResponse> => {
   try {
-    const response = await axios.delete(`${API}/properties/${propertyId}`);
+    const response = await axios.delete(`${API}/properties/${propertyId}`, {
+      data: { deleteReason } // Pasar el motivo de eliminación en el body
+    });
     return response;
   } catch (error) {
     console.error('Error al eliminar propiedad:', error);

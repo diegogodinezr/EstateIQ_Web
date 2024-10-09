@@ -98,6 +98,40 @@
   gap: 2rem;
 }
 
+.filterButtons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.filterButton {
+  min-width: 120px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #f2b333;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background-color: #ffffff;
+  color: #f2b333;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.filterButton:hover {
+  background-color: #fff8e6;
+  transform: translateY(-2px);
+}
+
+.activeFilter {
+  background-color: #f2b333;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(242, 179, 51, 0.2);
+}
+
 .propertyCard {
   background-color: white;
   border-radius: 0.75rem;
@@ -386,6 +420,43 @@
   color: #777;
 }
 
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.editButton, .deleteButton {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.editButton {
+  background-color: #17a2b8;
+  color: #ffffff;
+  margin-right: 1rem;
+}
+
+.editButton:hover {
+  background-color: #138496;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+
 .statItem {
   margin-bottom: 0.5rem;
 }
@@ -419,6 +490,85 @@
   color: #555;
   text-align: center;
   margin-top: 2rem;
+}
+.deleteModal {
+  background-color: white;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
+}
+
+.deleteModalHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.deleteModalHeader h2 {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.deleteModalHeader p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.deleteReasonButton {
+  width: 100%;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border: none;
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.deleteReasonButton:hover {
+  background-color: #f8f9fa;
+  border-color: #f2b333;
+  color: #f2b333;
+}
+
+.deleteReasonButton:first-child {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+
+.deleteReasonButton:first-child:hover {
+  background-color: #45a049;
+  color: white;
+}
+
+.deleteReasonButton:nth-child(2) {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+}
+
+.deleteReasonButton:nth-child(2):hover {
+  background-color: #f57c00;
+  color: white;
+}
+
+.deleteReasonButton:last-child {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.deleteReasonButton:last-child:hover {
+  background-color: #e53935;
+  color: white;
 }
 
 /* Mejoras Responsivas */
@@ -489,6 +639,34 @@
 }
 
 @media (max-width: 480px) {
+  .filterButtons {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.25rem;
+  }
+
+  .filterButton {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .deleteModal {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .deleteModalHeader h2 {
+    font-size: 1.25rem;
+  }
+
+  .deleteModalHeader p {
+    font-size: 0.9rem;
+  }
+
+  .deleteReasonButton {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
       .modalTitleSection {
         gap: 0.25rem;
     }
@@ -545,6 +723,15 @@
 
 /* Mejoras para dispositivos táctiles */
 @media (hover: none) {
+  .filterButton:hover,
+  .deleteReasonButton:hover {
+    transform: none;
+  }
+
+  .filterButton:active,
+  .deleteReasonButton:active {
+    opacity: 0.8;
+  }
   .propertyCard:hover {
       transform: none;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -566,5 +753,9 @@
   .backButton,
   .logoutButton {
       transition: none;
+  }
+  .filterButton,
+  .deleteReasonButton {
+    transition: none;
   }
 }
