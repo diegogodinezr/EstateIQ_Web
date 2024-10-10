@@ -15,8 +15,8 @@ interface PropertyFilters {
 }
 
 // API Configuration
-//const API = 'https://estate-iq-backend.vercel.app/api';
-const API = 'http://localhost:3000/api';
+const API = 'https://estate-iq-backend.vercel.app/api';
+//const API = 'http://localhost:3000/api';
 
 axios.defaults.baseURL = API;
 
