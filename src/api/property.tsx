@@ -15,8 +15,8 @@ interface PropertyFilters {
 }
 
 // API Configuration
-const API = 'https://estate-iq-backend.vercel.app/api';
-// const API = 'http://localhost:3000/api';
+//const API = 'https://estate-iq-backend.vercel.app/api';
+const API = 'http://localhost:3000/api';
 
 axios.defaults.baseURL = API;
 
@@ -76,6 +76,16 @@ export const getProperties = async (filters: PropertyFilters): Promise<AxiosResp
     return response;
   } catch (error) {
     console.error('Error al obtener propiedades:', error);
+    throw error;
+  }
+};
+
+export const getPropertyById = async (propertyId: string): Promise<AxiosResponse> => {
+  try {
+    const response = await axios.get(`${API}/properties/${propertyId}`);
+    return response;
+  } catch (error) {
+    console.error('Error al obtener la propiedad:', error);
     throw error;
   }
 };

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { HashRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import AddProperty from './components/AddProperty';
+import EditProperty from './components/EditProperty';
 import Register from './components/Register';
 import Login from './components/Login';
 import Profile from './components/Profile';
@@ -38,6 +39,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           element={
             <PrivateRoute>
               <AddProperty />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/edit-property/:id"
+          element={
+            <PrivateRoute>
+              <EditProperty />
             </PrivateRoute>
           }
         />

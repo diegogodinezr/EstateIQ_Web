@@ -281,3 +281,175 @@ h1 {
     font-size: 0.9rem;
   }
 }
+/* Contenedor principal para la sección de imágenes */
+.imageSection {
+  margin-top: 2rem;
+  border: 2px dashed #e0e0e0;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.imageSection:hover {
+  border-color: #f2b333;
+  background-color: #fff;
+}
+
+/* Estilos para el input de tipo file */
+.inputGroup input[type="file"] {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.inputGroup input[type="file"]::-webkit-file-upload-button {
+  background-color: #f2b333;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.3rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.inputGroup input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: #d49a2b;
+}
+
+/* Contenedor de previsualizaciones de imágenes */
+.imagePreviewContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Estilos para cada preview de imagen */
+.imagePreview {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.imagePreview:hover {
+  transform: scale(1.02);
+}
+
+.imagePreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+/* Botón para eliminar imagen */
+.removeImageButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.removeImageButton:hover {
+  background-color: #e74c3c;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Mensaje de carga */
+.uploadMessage {
+  text-align: center;
+  color: #666;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .imagePreviewContainer {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .removeImageButton {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .imagePreviewContainer {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+  
+  .imageSection {
+    padding: 1rem;
+  }
+}
+/* Estilos para el botón de guardar cambios */
+.submitButton {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f2b333;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+  box-shadow: 0 2px 4px rgba(242, 179, 51, 0.2);
+}
+
+.submitButton:hover {
+  background-color: #d49a2b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(242, 179, 51, 0.3);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(242, 179, 51, 0.2);
+}
+
+.submitButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .submitButton {
+    padding: 0.875rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .submitButton {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    margin-top: 1.5rem;
+  }
+}
