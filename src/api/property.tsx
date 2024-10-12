@@ -203,3 +203,15 @@ export const incrementPropertyViews = async (propertyId: string): Promise<AxiosR
     throw error;
   }
 };
+// Función para actualizar las visitas presenciales
+export const updatePhysicalVisits = async (propertyId: string, physicalVisits: number): Promise<AxiosResponse> => {
+  try {
+    const response = await axios.put(`${API}/properties/${propertyId}/physical-visits`, {
+      physicalVisits,
+    });
+    return response;
+  } catch (error) {
+    console.error('Error al actualizar visitas presenciales:', error);
+    throw error;
+  }
+};

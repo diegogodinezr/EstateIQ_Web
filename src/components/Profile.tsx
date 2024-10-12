@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Square, X, Phone, ArrowLeft, Home, Building2, Landmark, Store } from 'lucide-react';
-import { getProfile, deleteProperty} from '../api/property';
+import { getProfile, deleteProperty, updatePhysicalVisits } from '../api/property';
 import styles from './Profile.module.css';
 
 interface Property {
@@ -20,6 +20,7 @@ interface Property {
   status: string;
   createdAt: string;
   views: number;
+  physicalVisits: number;
   isFeatured: boolean;
 }
 
@@ -51,7 +52,10 @@ const UserProfile = () => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null); // Estado para el modal de eliminación
   const [filter, setFilter] = useState<'active' | 'deleted'>('active'); // Estado del filtro
+  const [physicalVisits, setPhysicalVisits] = useState<number>(0); // Contador de visitas presenciales
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -75,6 +79,41 @@ const UserProfile = () => {
 
   const openModal = (property: Property) => {
     setSelectedProperty(property);
+    setPhysicalVisits(property.physicalVisits); // Inicializar el contador de visitas presenciales
+  };
+
+  const handleIncrementVisits = () => {
+    setPhysicalVisits((prev) => prev + 1);
+  };
+  const handleSavePhysicalVisits = async () => {
+    if (selectedProperty) {
+      try {
+        await updatePhysicalVisits(selectedProperty._id, physicalVisits); // Llamada al backend
+        
+        // Actualizar el estado con las nuevas visitas presenciales
+        setUserData((prevData) => {
+          if (!prevData) return null;
+          const updatedProperties = prevData.properties.map((prop) => {
+            if (prop._id === selectedProperty._id) {
+              return { ...prop, physicalVisits }; // Actualizar las visitas presenciales
+            }
+            return prop;
+          });
+          return { ...prevData, properties: updatedProperties };
+        });
+  
+        // Establecer el mensaje de éxito
+        setSuccessMessage('Visitas presenciales actualizadas exitosamente');
+        
+        // Limpiar el mensaje después de 3 segundos
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
+        
+      } catch (error) {
+        console.error('Error al actualizar las visitas presenciales', error);
+      }
+    }
   };
   
   const filteredProperties = userData?.properties.filter(property => {
@@ -354,7 +393,29 @@ const UserProfile = () => {
                 </div>
               </div>
             </div>
+          
+            {/* Contador de visitas presenciales */}  
+            <div className={styles.modalStats}>
+              <div className={styles.counterContainer}>
+                <span className={styles.counterLabel}>Visitas Presenciales:</span>
+                <span className={styles.counterValue}>{physicalVisits}</span>
+                <button onClick={handleIncrementVisits} className={styles.incrementButton}>
+                  +
+                </button>
+              </div>
+            </div>
 
+            {/* Mensaje de éxito */}
+            {successMessage && (
+              <div className={styles.successMessage}>
+                {successMessage}
+              </div>
+            )}
+            <div className={styles.modalActions}>
+              <button onClick={handleSavePhysicalVisits} className={styles.saveButton}>
+                Guardar
+              </button>
+            </div>
             {/* Botones de Modificar y Eliminar */}
             <div className={styles.modalActions}>
               <button
