@@ -15,8 +15,7 @@ interface PropertyFilters {
 }
 
 // API Configuration
-const API = 'https://estate-iq-backend.vercel.app/api';
-//const API = 'http://localhost:3000/api';
+const API = 'http://localhost:3000/api'; // Cambia esto por tu URL de producción
 
 axios.defaults.baseURL = API;
 
@@ -160,6 +159,7 @@ export const getProfile = async (): Promise<AxiosResponse | null> => {
     return null;
   }
 
+  setAuthHeader(token); // Asegúrate de que el token esté en el header
   try {
     const response = await axios.get(`${API}/profile`);
     return response;
@@ -171,20 +171,13 @@ export const getProfile = async (): Promise<AxiosResponse | null> => {
 
 export const getAdminStatistics = async (): Promise<AxiosResponse> => {
   try {
+    const token = getToken();  // Asegúrate de que el token esté disponible
+    setAuthHeader(token); // Establece el token en el header
+
     const response = await axios.get(`${API}/statistics`);
     return response;
   } catch (error) {
     console.error('Error al obtener estadísticas:', error);
-    throw error;
-  }
-};
-
-export const getDetailedStatistics = async (): Promise<AxiosResponse> => {
-  try {
-    const response = await axios.get(`${API}/detailed-statistics`);
-    return response;
-  } catch (error) {
-    console.error('Error al obtener estadísticas detalladas:', error);
     throw error;
   }
 };
@@ -194,6 +187,7 @@ const token = getToken();
 if (token) {
   setAuthHeader(token);
 }
+
 export const incrementPropertyViews = async (propertyId: string): Promise<AxiosResponse> => {
   try {
     const response = await axios.get(`${API}/properties/${propertyId}`);
@@ -203,6 +197,7 @@ export const incrementPropertyViews = async (propertyId: string): Promise<AxiosR
     throw error;
   }
 };
+
 // Función para actualizar las visitas presenciales
 export const updatePhysicalVisits = async (propertyId: string, physicalVisits: number): Promise<AxiosResponse> => {
   try {
