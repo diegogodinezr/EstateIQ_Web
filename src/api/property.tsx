@@ -15,8 +15,8 @@ interface PropertyFilters {
 }
 
 // API Configuration
-const API = 'http://localhost:3000/api'; // Cambia esto por tu URL de producción
-
+//const API = 'http://localhost:3000/api'; // Cambia esto por tu URL de producción
+const API = 'https://estate-iq-backend.vercel.app/api';
 axios.defaults.baseURL = API;
 
 // Función para obtener el token
