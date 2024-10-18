@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { DollarSign, MapPin, Bed, Bath, Square, X, Phone, Home, Building2, Landmark, Store, Eye } from 'lucide-react';
 import { getProperties, incrementPropertyViews } from '../api/property';
 import styles from './PropertyListing.module.css';
+import { jwtDecode } from "jwt-decode";
 
 interface Property {
   _id: string;
@@ -18,6 +19,10 @@ interface Property {
   propertyType: 'House' | 'Apartment' | 'Land' | 'Commercial';
   contactNumber: string;
   views: number; // Añadido el campo views
+}
+
+interface TokenPayload {
+  role: string;
 }
 
 const PropertyTypeIcon = ({ type }: { type: Property['propertyType'] }) => {
@@ -44,6 +49,7 @@ const PropertyListing = () => {
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const navigate = useNavigate();
 
@@ -51,6 +57,12 @@ const PropertyListing = () => {
     const token = localStorage.getItem('authToken');
     if (token) {
       setIsLoggedIn(true);
+      try {
+        const decoded = jwtDecode<TokenPayload>(token);
+        setIsAdmin(decoded.role === 'admin');
+      } catch (error) {
+        console.error('Error decodificando el token:', error);
+      }
     }
 
     const fetchData = async () => {
@@ -120,6 +132,7 @@ const PropertyListing = () => {
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     setIsLoggedIn(false);
+    setIsAdmin(false);
     navigate('/');
   };
 
@@ -134,6 +147,11 @@ const PropertyListing = () => {
           <button onClick={handleProfile} className={styles.profileButton}>
             Perfil
           </button>
+          {isLoggedIn && isAdmin && (
+            <button onClick={() => navigate('/statistics')} className={styles.statisticsButton}>
+              Estadísticas
+            </button>
+          )}
           {isLoggedIn && (
             <button onClick={handleLogout} className={styles.logoutButton}>
               Cerrar sesión

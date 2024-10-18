@@ -20,7 +20,45 @@
   flex-wrap: wrap;
   gap: 1rem;
 }
+.statisticsButton {
+  background-color: white;
+  color: #f2b333;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid #f2b333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.statisticsButton:hover {
+  background-color: #fff8e6;
+  color: #f2b333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Ajuste para dispositivos móviles */
+@media (max-width: 768px) {
+  .statisticsButton {
+    width: 100%;
+    max-width: 300px;
+    margin: 0.5rem 0;
+  }
+}
+
+/* Estado activo para dispositivos táctiles */
+@media (hover: none) {
+  .statisticsButton:active {
+    transform: scale(0.98);
+  }
+}
 .title {
   color: white;
   font-size: 1.8rem;
