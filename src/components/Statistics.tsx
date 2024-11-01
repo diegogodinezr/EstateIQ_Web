@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { getAdminStatistics } from '../api/property';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
-  ResponsiveContainer, PieChart, Pie, Cell 
+  ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line 
 } from 'recharts';
 
-import { DollarSign, Users, Home, Activity, Clock, Trash, MapPin } from 'lucide-react';
+import { DollarSign, Users, Home, Activity, Clock, Trash, MapPin, UserPlus } from 'lucide-react';
+
 
 const COLORS = ['#f2b333', '#f2545b', '#30a46c', '#5c7cfa', '#8884d8', '#82ca9d', '#ffc658'];
 
@@ -23,6 +24,10 @@ interface StatisticsData {
   conversionRate: {
     conversionRate: number;
   };
+  usersRegisteredPerMonth: Array<{
+    _id: string;
+    count: number;
+  }>;
   propertyTypeDistribution: Array<{
     _id: string;
     count: number;
@@ -30,7 +35,7 @@ interface StatisticsData {
   propertiesByLocation: Array<{
     _id: string;
     total: number;
-  }>;
+  }>;  
   mostViewedProperties: Array<{
     title: string;
     views: number;
@@ -70,6 +75,16 @@ interface ProcessedPriceData {
   location: string;
   [key: string]: string | number; // Para permitir propiedades dinámicas de tipos de propiedad
 }
+// Función para formatear los meses en español
+const formatMonth = (monthStr: string) => {
+  const months: { [key: string]: string } = {
+    '01': 'Enero', '02': 'Febrero', '03': 'Marzo', 
+    '04': 'Abril', '05': 'Mayo', '06': 'Junio',
+    '07': 'Julio', '08': 'Agosto', '09': 'Septiembre', 
+    '10': 'Octubre', '11': 'Noviembre', '12': 'Diciembre'
+  };
+  return months[monthStr.split('-')[1]] || monthStr;
+};
 
 const Statistics = () => {
   const [statistics, setStatistics] = useState<StatisticsData | null>(null);
@@ -114,6 +129,11 @@ const Statistics = () => {
       </div>
     );
   }
+
+  const monthlyRegistrationData = statistics.usersRegisteredPerMonth.map(item => ({
+    month: item._id,
+    usuarios: item.count
+  }));
 
   const processAvgPriceData = (data: StatisticsData['avgPriceByTypeAndLocation']): ProcessedPriceData[] => {
     return data.reduce<ProcessedPriceData[]>((acc, curr) => {
@@ -177,11 +197,88 @@ const Statistics = () => {
     value: item.total
   }));
 
+  
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Estadísticas de EstateIQ</h1>
-
+       {/* Usuarios Registrados por Mes */}
+        <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 mb-8">
+          <h2 className="text-xl font-semibold text-yellow-500 mb-4 flex items-center">
+            <UserPlus className="mr-2" />
+            Usuarios Registrados por Mes
+          </h2>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart 
+              data={monthlyRegistrationData.map(item => ({
+                month: formatMonth(item.month),
+                usuarios: item.usuarios
+              }))}
+              margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+            >
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                stroke="#e0e0e0"
+              />
+              <XAxis 
+                dataKey="month"
+                angle={-45}
+                textAnchor="end"
+                height={70}
+                interval={0}
+                tick={{ fontSize: 10 }}
+              />
+              <YAxis 
+                label={{ 
+                  value: 'Número de Usuarios', 
+                  angle: -90, 
+                  position: 'insideLeft',
+                  offset: -10,
+                  fontSize: 12
+                }}
+                tickFormatter={(value) => Math.round(value).toLocaleString()}
+              />
+              <Tooltip 
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-white p-4 border rounded shadow-lg">
+                        <p className="font-bold text-yellow-600">{label}</p>
+                        <p className="text-gray-700">
+                          Usuarios Registrados: 
+                          <span className="ml-2 font-semibold">{payload[0].value}</span>
+                        </p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Legend 
+                verticalAlign="top" 
+                height={36}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="usuarios" 
+                stroke="#f2b333" 
+                strokeWidth={3}
+                name="Usuarios Registrados"
+                activeDot={{ 
+                  r: 8,
+                  stroke: '#f2b333',
+                  strokeWidth: 2,
+                  fill: 'white'
+                }}
+                dot={{ 
+                  stroke: '#f2b333', 
+                  strokeWidth: 2,
+                  fill: '#f2b333'
+                }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Resumen General */}
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
