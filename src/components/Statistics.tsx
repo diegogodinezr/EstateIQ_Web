@@ -2,11 +2,19 @@ import { useEffect, useState } from 'react';
 import { getAdminStatistics } from '../api/property';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
-  ResponsiveContainer, PieChart, Pie, ScatterChart, Scatter, Cell 
+  ResponsiveContainer, PieChart, Pie, Cell 
 } from 'recharts';
+
 import { DollarSign, Users, Home, Activity, Clock, Trash, MapPin } from 'lucide-react';
 
 const COLORS = ['#f2b333', '#f2545b', '#30a46c', '#5c7cfa', '#8884d8', '#82ca9d', '#ffc658'];
+
+const typeMap: { [key: string]: string } = {
+  'Land': 'Terreno',
+  'House': 'Casa',
+  'Apartment': 'Departamento',
+  'Commercial': 'Comercial'
+};
 
 interface StatisticsData {
   totalUsers: number;
@@ -58,6 +66,10 @@ interface StatisticsData {
     usersWithProperties: number;
   };
 }
+interface ProcessedPriceData {
+  location: string;
+  [key: string]: string | number; // Para permitir propiedades dinámicas de tipos de propiedad
+}
 
 const Statistics = () => {
   const [statistics, setStatistics] = useState<StatisticsData | null>(null);
@@ -103,6 +115,28 @@ const Statistics = () => {
     );
   }
 
+  const processAvgPriceData = (data: StatisticsData['avgPriceByTypeAndLocation']): ProcessedPriceData[] => {
+    return data.reduce<ProcessedPriceData[]>((acc, curr) => {
+      const location = curr._id.location;
+      const existingLocationIndex = acc.findIndex(item => item.location === location);
+      
+      if (existingLocationIndex === -1) {
+        acc.push({
+          location,
+          [curr._id.type]: curr.avgPrice,
+          [`${curr._id.type}_translated`]: typeMap[curr._id.type] // Guardamos también el nombre traducido
+        });
+      } else {
+        acc[existingLocationIndex] = {
+          ...acc[existingLocationIndex],
+          [curr._id.type]: curr.avgPrice,
+          [`${curr._id.type}_translated`]: typeMap[curr._id.type]
+        };
+      }
+      return acc;
+    }, []);
+  };
+
   const propertyTypeData = statistics.propertyTypeDistribution.map(item => ({
     name: item._id,
     value: item.count
@@ -112,17 +146,25 @@ const Statistics = () => {
     name: loc._id,
     value: loc.total,
   }));
-
-  const avgPriceByTypeAndLocationData = statistics.avgPriceByTypeAndLocation.reduce((acc: any, curr) => {
-    if (!acc[curr._id.type]) {
-      acc[curr._id.type] = [];
+  statistics.avgPriceByTypeAndLocation.reduce<ProcessedPriceData[]>((acc, curr) => {
+    const location = curr._id.location;
+    const existingLocationIndex = acc.findIndex(item => item.location === location);
+    
+    if (existingLocationIndex === -1) {
+      // Si la ubicación no existe, crear nuevo objeto
+      acc.push({
+        location,
+        [curr._id.type]: curr.avgPrice
+      });
+    } else {
+      // Si la ubicación existe, actualizar el objeto existente
+      acc[existingLocationIndex] = {
+        ...acc[existingLocationIndex],
+        [curr._id.type]: curr.avgPrice
+      };
     }
-    acc[curr._id.type].push({
-      location: curr._id.location,
-      avgPrice: curr.avgPrice
-    });
     return acc;
-  }, {});
+  }, []);
 
   const visitsByLocationData = statistics.visitsByLocation.map(item => ({
     name: item._id,
@@ -313,32 +355,84 @@ const Statistics = () => {
 
           {/* Precio promedio por tipo y ubicación */}
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-semibold text-yellow-500 mb-4">Precio Promedio por Tipo y Ubicación</h2>
-            <ResponsiveContainer width="100%" height={400}>
-              <ScatterChart
+          <h2 className="text-xl font-semibold text-yellow-500 mb-6 flex items-center">
+            <DollarSign className="mr-2" />
+            Precio Promedio por Tipo y Ubicación
+          </h2>
+          <div className="h-[500px]"> {/* Aumentar altura para mejor visualización */}
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={processAvgPriceData(statistics.avgPriceByTypeAndLocation)}
                 margin={{
                   top: 20,
-                  right: 20,
-                  bottom: 20,
-                  left: 20,
+                  right: 30,
+                  left: 60,
+                  bottom: 120
                 }}
+                barSize={35}
+                barGap={0}
               >
-                <CartesianGrid />
-                <XAxis type="category" dataKey="location" name="Ubicación" />
-                <YAxis type="number" dataKey="avgPrice" name="Precio Promedio" unit="$" />
-                <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                <Legend />
-                {Object.entries(avgPriceByTypeAndLocationData).map(([type, data], index) => (
-                <Scatter 
-                  key={type} 
-                  name={type} 
-                  data={Array.isArray(data) ? data : []} 
-                  fill={COLORS[index % COLORS.length]} 
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
                 />
-                ))}
-              </ScatterChart>
+                <XAxis
+                  dataKey="location"
+                  angle={-45}
+                  textAnchor="end"
+                  height={100}
+                  interval={0}
+                  tick={{
+                    fontSize: 12,
+                    fill: '#666'
+                  }}
+                />
+                <YAxis
+                  tickFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
+                  label={{
+                    value: 'Precio Promedio (Millones)',
+                    angle: -90,
+                    position: 'insideLeft',
+                    offset: -40,
+                    style: { textAnchor: 'middle' }
+                  }}
+                  tick={{
+                    fontSize: 12,
+                    fill: '#666'
+                  }}
+                />
+                <Tooltip
+                  formatter={(value: number) => [
+                    `$${value.toLocaleString()}`,
+                    'Precio Promedio'
+                  ]}
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px'
+                  }}
+                />
+                <Legend
+                  verticalAlign="bottom"
+                  height={50}
+                  wrapperStyle={{
+                    paddingTop: '20px'
+                  }}
+                />
+                {Array.from(new Set(statistics.avgPriceByTypeAndLocation.map(item => item._id.type)))
+              .map((type, index) => (
+                <Bar
+                  key={type}
+                  dataKey={type}
+                  name={typeMap[type]} // Usar typeMap aquí
+                  fill={COLORS[index % COLORS.length]}
+                  radius={[4, 4, 0, 0]}
+                />
+              ))}
+          </BarChart>
             </ResponsiveContainer>
           </div>
+        </div>
 
           {/* Visitas por ubicación */}
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
