@@ -9,7 +9,8 @@ interface UserData {
 interface PropertyFilters {
   type?: 'all' | 'sale' | 'rent';
   propertyType?: string;
-  location?: string;
+  estado?: string;  // Nuevo filtro para estado
+  municipio?: string;
   minPrice?: number | '';
   maxPrice?: number | '';
 }
@@ -62,12 +63,13 @@ export const addPropertyRequest = async (formData: FormData): Promise<AxiosRespo
 
 export const getProperties = async (filters: PropertyFilters): Promise<AxiosResponse> => {
   try {
-    const { type, propertyType, location, minPrice, maxPrice } = filters;
+    const { type, propertyType, estado, municipio, minPrice, maxPrice } = filters;
     
     const params: any = {};
     if (type && type !== 'all') params.type = type;
     if (propertyType) params.propertyType = propertyType;
-    if (location) params.location = location;
+    if (estado) params.estado = estado;  // Agregar filtro de estado
+    if (municipio) params.municipio = municipio;
     if (minPrice !== undefined && minPrice !== '') params.minPrice = minPrice;
     if (maxPrice !== undefined && maxPrice !== '') params.maxPrice = maxPrice;
 
@@ -78,7 +80,6 @@ export const getProperties = async (filters: PropertyFilters): Promise<AxiosResp
     throw error;
   }
 };
-
 export const getPropertyById = async (propertyId: string): Promise<AxiosResponse> => {
   try {
     const response = await axios.get(`${API}/properties/${propertyId}`);

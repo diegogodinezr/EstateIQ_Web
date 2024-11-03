@@ -436,7 +436,7 @@ const Statistics = () => {
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
             <h2 className="text-xl font-semibold text-yellow-500 mb-4 flex items-center">
               <MapPin className="mr-2" />
-              Propiedades por Ubicación
+              Propiedades por Municipio
             </h2>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={locationData}>
@@ -454,7 +454,7 @@ const Statistics = () => {
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
           <h2 className="text-xl font-semibold text-yellow-500 mb-6 flex items-center">
             <DollarSign className="mr-2" />
-            Precio Promedio por Tipo y Ubicación
+            Precio Promedio por Tipo y Municipio
           </h2>
           <div className="h-[500px]"> {/* Aumentar altura para mejor visualización */}
             <ResponsiveContainer width="100%" height="100%">
@@ -533,7 +533,7 @@ const Statistics = () => {
 
           {/* Visitas por ubicación */}
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-semibold text-yellow-500 mb-4">Visitas por Ubicación</h2>
+            <h2 className="text-xl font-semibold text-yellow-500 mb-4">Visitas por Municipio</h2>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={visitsByLocationData}>
                 <CartesianGrid strokeDasharray="3 3" />

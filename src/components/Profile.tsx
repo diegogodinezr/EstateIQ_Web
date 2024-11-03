@@ -8,7 +8,11 @@ interface Property {
   _id: string;
   title: string;
   price: number;
-  location: string;
+  calleYNumero: string;
+  colonia: string;
+  codigoPostal: string;
+  estado: string;
+  municipio: string;
   bedrooms: number;
   bathrooms: number;
   squaremeters: number;
@@ -269,7 +273,7 @@ const UserProfile = () => {
                 </div>
                 <div className={styles.propertyLocation}>
                   <MapPin className={styles.icon} />
-                  <span>{property.location}</span>
+                  <span>{property.estado}, {property.municipio}</span>
                 </div>
                 <div className={styles.propertyDetails}>
                   <div className={styles.detailItem}>
@@ -341,7 +345,10 @@ const UserProfile = () => {
             <div className={styles.modalMainInfo}>
               <div className={styles.modalLocation}>
                 <MapPin className={styles.icon} />
-                <span>{selectedProperty.location}</span>
+                <span>
+                  {selectedProperty.calleYNumero}, {selectedProperty.colonia}, 
+                  CP {selectedProperty.codigoPostal}, {selectedProperty.municipio}, {selectedProperty.estado}
+                </span>
               </div>
 
               <div className={styles.modalKeyDetails}>

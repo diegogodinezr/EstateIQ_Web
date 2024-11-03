@@ -8,7 +8,11 @@ interface Property {
   _id: string;
   title: string;
   price: number;
-  location: string;
+  calleYNumero: string;
+  colonia: string;
+  codigoPostal: string;
+  estado: string;
+  municipio: string;
   bedrooms: number;
   bathrooms: number;
   squaremeters: number;
@@ -28,7 +32,11 @@ const EditProperty: React.FC = () => {
     _id: '',
     title: '',
     price: 0,
-    location: '',
+    calleYNumero: '',
+    colonia: '',
+    codigoPostal: '',
+    estado: '',
+    municipio: '',
     bedrooms: 0,
     bathrooms: 0,
     squaremeters: 0,
@@ -45,7 +53,6 @@ const EditProperty: React.FC = () => {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [, setIsLoading] = useState(true);
   const [newImages, setNewImages] = useState<File[]>([]);
-
 
   useEffect(() => {
     const fetchPropertyData = async () => {
@@ -84,10 +91,9 @@ const EditProperty: React.FC = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      const newFiles = Array.from(files); // Archivos de tipo File[]
-      setNewImages([...newImages, ...newFiles]); // Guardamos los archivos en el estado de `newImages`
+      const newFiles = Array.from(files);
+      setNewImages([...newImages, ...newFiles]);
   
-      // Generar URLs para las vistas previas
       const newPreviews = newFiles.map(file => URL.createObjectURL(file));
       setPreviewImages([...previewImages, ...newPreviews]);
     }
@@ -108,44 +114,42 @@ const EditProperty: React.FC = () => {
       setPreviewImages(newPreviews);
     }
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
     setFormSuccess('');
-  
+
     if (formData.title.trim() === '') {
       setFormError('El título es obligatorio');
       return;
     }
-  
+
     if (formData.price <= 0) {
       setFormError('El precio debe ser mayor que cero');
       return;
     }
-  
+
     const formDataToSend = new FormData();
     
-    // Adjuntar el resto de los campos del formulario
     Object.entries(formData).forEach(([key, value]) => {
       if (key !== 'images') {
         formDataToSend.append(key, value.toString());
       }
     });
-  
-    // Adjuntar las nuevas imágenes (tipo File[])
+
     newImages.forEach((image) => {
-      formDataToSend.append('images', image); // Agregar las nuevas imágenes
+      formDataToSend.append('images', image);
     });
-  
-    // Adjuntar las URLs de las imágenes existentes que no se eliminaron
+
     formData.images.forEach((imageUrl) => {
-      formDataToSend.append('existingImages', imageUrl); // Agregar las URLs de imágenes existentes
+      formDataToSend.append('existingImages', imageUrl);
     });
-  
+
     try {
-      setIsLoading(true); // Activar el estado de carga
+      setIsLoading(true);
       const response = await updateProperty(id!, formDataToSend);
-  
+
       if (response.status === 200) {
         setFormSuccess('¡Propiedad actualizada con éxito!');
         setTimeout(() => {
@@ -156,15 +160,18 @@ const EditProperty: React.FC = () => {
       console.error('Error:', error);
       setFormError('Hubo un error al actualizar la propiedad');
     } finally {
-      setIsLoading(false); // Desactivar el estado de carga
+      setIsLoading(false);
     }
   };
-  
+
+  const handleCancel = () => {
+    navigate('/profile');
+  };
 
   return (
     <div className={styles.addPropertyContainer}>
       <div className={styles.header}>
-        <button className={styles.backButton} onClick={() => navigate('/profile')}>
+        <button className={styles.backButton} onClick={handleCancel}>
           <X size={24} />
         </button>
         <h1>Modificar propiedad</h1>
@@ -197,9 +204,49 @@ const EditProperty: React.FC = () => {
               <MapPin className={styles.inputIcon} />
               <input
                 type="text"
-                name="location"
-                placeholder="Ubicación"
-                value={formData.location}
+                name="calleYNumero"
+                placeholder="Calle y Número"
+                value={formData.calleYNumero}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                name="colonia"
+                placeholder="Colonia"
+                value={formData.colonia}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                name="codigoPostal"
+                placeholder="Código Postal"
+                value={formData.codigoPostal}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                name="estado"
+                placeholder="Estado"
+                value={formData.estado}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                name="municipio"
+                placeholder="Municipio"
+                value={formData.municipio}
                 onChange={handleChange}
               />
             </div>
@@ -282,12 +329,32 @@ const EditProperty: React.FC = () => {
             />
           </div>
 
+          <div className={styles.imageUpload}>
+            <label htmlFor="imagen" className={styles.imageUploadLabel}>
+              <ImageIcon size={24} />
+              <span>Agregar imágenes</span>
+            </label>
+            <input
+              type="file"
+              id="imagen"
+              name="imagen"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+              className={styles.fileInput}
+            />
+          </div>
+
           {/* Imágenes existentes */}
           <div className={styles.imagePreviewContainer}>
             {existingImages.map((imageUrl, index) => (
               <div key={`existing-${index}`} className={styles.imagePreview}>
                 <img src={imageUrl} alt={`Imagen existente ${index + 1}`} />
-                <button type="button" className={styles.removeImageButton} onClick={() => removeImage(index, true)}>
+                <button 
+                  type="button" 
+                  onClick={() => removeImage(index, true)}
+                  className={styles.removeImageButton}
+                >
                   <X size={16} />
                 </button>
               </div>
@@ -299,30 +366,28 @@ const EditProperty: React.FC = () => {
             {previewImages.map((imageUrl, index) => (
               <div key={`new-${index}`} className={styles.imagePreview}>
                 <img src={imageUrl} alt={`Nueva imagen ${index + 1}`} />
-                <button type="button" className={styles.removeImageButton} onClick={() => removeImage(index)}>
+                <button 
+                  type="button" 
+                  onClick={() => removeImage(index)}
+                  className={styles.removeImageButton}
+                >
                   <X size={16} />
                 </button>
               </div>
             ))}
           </div>
 
-          {/* Input para subir imágenes */}
-          <div className={styles.inputGroup}>
-            <ImageIcon className={styles.inputIcon} />
-            <input
-              type="file"
-              name="images"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-            />
-          </div>
-
-          <button type="submit" className={styles.submitButton}>
-            Guardar cambios
-          </button>
           {formError && <div className={styles.errorMessage}>{formError}</div>}
           {formSuccess && <div className={styles.successMessage}>{formSuccess}</div>}
+          
+          <div className={styles.formButtons}>
+            <button type="button" className={styles.cancelButton} onClick={handleCancel}>
+              Cancelar
+            </button>
+            <button type="submit" className={styles.publishButton}>
+              Guardar cambios
+            </button>
+          </div>
         </form>
       </div>
     </div>

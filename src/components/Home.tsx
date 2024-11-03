@@ -9,7 +9,11 @@ interface Property {
   _id: string;
   title: string;
   price: number;
-  location: string;
+  calleYNumero: string;
+  colonia: string;
+  codigoPostal: string;
+  estado: string;
+  municipio: string;
   bedrooms: number;
   bathrooms: number;
   squaremeters: number;
@@ -18,7 +22,7 @@ interface Property {
   type: 'sale' | 'rent';
   propertyType: 'House' | 'Apartment' | 'Land' | 'Commercial';
   contactNumber: string;
-  views: number; // Añadido el campo views
+  views: number;
 }
 
 interface TokenPayload {
@@ -44,7 +48,8 @@ const PropertyListing = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [filter, setFilter] = useState<'all' | 'sale' | 'rent'>('all');
   const [propertyType, setPropertyType] = useState<string>('');
-  const [location, setLocation] = useState<string>('');
+  const [estado, setEstado] = useState<string>('');
+  const [municipio, setMunicipio] = useState<string>('');
   const [minPrice, setMinPrice] = useState<number | ''>('');
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
@@ -70,7 +75,8 @@ const PropertyListing = () => {
         const response = await getProperties({
           type: filter,
           propertyType,
-          location,
+          estado,
+          municipio,
           minPrice,
           maxPrice,
         });
@@ -81,20 +87,18 @@ const PropertyListing = () => {
     };
 
     fetchData();
-  }, [filter, propertyType, location, minPrice, maxPrice]);
+  }, [filter, propertyType, estado, municipio, minPrice, maxPrice]);
 
   const openModal = async (property: Property) => {
     try {
       const lastView = localStorage.getItem(`property-view-${property._id}`);
       const now = new Date().getTime();
       
-      // Solo incrementa las vistas si han pasado más de 24 horas desde la última vista
       if (!lastView || (now - parseInt(lastView)) > 24 * 60 * 60 * 1000) {
         const response = await incrementPropertyViews(property._id);
         localStorage.setItem(`property-view-${property._id}`, now.toString());
         setSelectedProperty(response.data);
         
-        // Actualiza la lista de propiedades para reflejar el nuevo contador de vistas
         setProperties(properties.map(p => 
           p._id === property._id ? {...p, views: response.data.views} : p
         ));
@@ -200,9 +204,19 @@ const PropertyListing = () => {
               <MapPin className={styles.inputIcon} />
               <input
                 type="text"
-                placeholder="Ubicación"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Estado"
+                value={estado}
+                onChange={(e) => setEstado(e.target.value)}
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.inputWrapper}>
+              <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                placeholder="Municipio"
+                value={municipio}
+                onChange={(e) => setMunicipio(e.target.value)}
                 className={styles.input}
               />
             </div>
@@ -253,7 +267,7 @@ const PropertyListing = () => {
                 </div>
                 <div className={styles.propertyLocation}>
                   <MapPin className={styles.icon} />
-                  <span>{property.location}</span>
+                  <span>{property.estado}, {property.municipio}</span>
                 </div>
                 <div className={styles.propertyDetails}>
                   <div className={styles.detailItem}>
@@ -313,7 +327,10 @@ const PropertyListing = () => {
             <div className={styles.modalMainInfo}>
               <div className={styles.modalLocation}>
                 <MapPin className={styles.icon} />
-                <span>{selectedProperty.location}</span>
+                <span>
+                  {selectedProperty.calleYNumero}, {selectedProperty.colonia}, 
+                  CP {selectedProperty.codigoPostal}, {selectedProperty.municipio}, {selectedProperty.estado}
+                </span>
               </div>
               
               <div className={styles.modalKeyDetails}>

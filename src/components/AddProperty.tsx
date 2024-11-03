@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {DollarSign, MapPin, Bed, Bath, Square, Type, Image as ImageIcon, FileText, X, Phone } from 'lucide-react';
+import { DollarSign, MapPin, Bed, Bath, Square, Type, Image as ImageIcon, FileText, X, Phone } from 'lucide-react';
 import styles from './AddProperty.module.css';
 import { addPropertyRequest } from '../api/property';
 
@@ -9,7 +9,11 @@ const AddProperty: React.FC = () => {
   const [formData, setFormData] = useState({
     title: '',
     price: '',
-    location: '',
+    calleYNumero: '',
+    colonia: '',
+    codigoPostal: '',
+    estado: '',
+    municipio: '',
     bedrooms: '',
     bathrooms: '',
     squaremeters: '',
@@ -95,7 +99,11 @@ const AddProperty: React.FC = () => {
         setFormData({
           title: '',
           price: '',
-          location: '',
+          calleYNumero: '',
+          colonia: '',
+          codigoPostal: '',
+          estado: '',
+          municipio: '',
           bedrooms: '',
           bathrooms: '',
           squaremeters: '',
@@ -151,9 +159,49 @@ const AddProperty: React.FC = () => {
               <MapPin className={styles.inputIcon} />
               <input
                 type="text"
-                name="location"
-                placeholder="Ubicación"
-                value={formData.location}
+                name="calleYNumero"
+                placeholder="Calle y Número"
+                value={formData.calleYNumero}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+            <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                name="colonia"
+                placeholder="Colonia"
+                value={formData.colonia}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+            <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                name="codigoPostal"
+                placeholder="Código Postal"
+                value={formData.codigoPostal}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+            <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                name="estado"
+                placeholder="Estado"
+                value={formData.estado}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+            <MapPin className={styles.inputIcon} />
+              <input
+                type="text"
+                name="municipio"
+                placeholder="Municipio"
+                value={formData.municipio}
                 onChange={handleChange}
               />
             </div>
@@ -224,21 +272,7 @@ const AddProperty: React.FC = () => {
                 onChange={handleChange}
               />
             </div>
-            {/* <div className={styles.checkboxGroup}>
-              <input
-                type="checkbox"
-                id="isFeatured"
-                name="isFeatured"
-                checked={formData.isFeatured}
-                onChange={handleChange}
-                className={styles.checkboxInput}
-              />
-              <label htmlFor="isFeatured" className={styles.checkboxLabel}>
-                Destacar esta propiedad
-              </label>
-            </div> */}
           </div>
-
           <div className={styles.inputGroup}>
             <FileText className={styles.inputIcon} />
             <textarea
@@ -260,7 +294,7 @@ const AddProperty: React.FC = () => {
               accept="image/*"
               onChange={handleImageChange}
               multiple
-              className={styles.imageInput}
+              className={styles.fileInput}
             />
           </div>
           <div className={styles.imagePreviewContainer}>
