@@ -1,8 +1,8 @@
-// Login.tsx
 import React, { useState } from 'react';
 import { loginUser } from '../api/property';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Login.module.css';
+import { ArrowLeft } from 'lucide-react';
 
 interface LoginResponse {
   token: string;
@@ -47,6 +47,13 @@ const Login = () => {
 
   return (
     <div className={styles.loginContainer}>
+      <button 
+        onClick={() => navigate('/home')} 
+        className={styles.backButton}
+      >
+        <ArrowLeft size={20} />
+        Volver
+      </button>
       <div className={styles.formWrapper}>
         <h2 className={styles.title}>Iniciar Sesión</h2>
         {error && <p className={styles.errorMessage}>{error}</p>}

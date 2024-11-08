@@ -9,6 +9,7 @@ import Login from './components/Login';
 import Profile from './components/Profile';
 import Statistics from './components/Statistics'; // Asegúrate de tener este componente
 import './index.css';
+import LandingPage from './components/Landing';
 
 // Lógica real de autenticación
 const isAuthenticated = () => {
@@ -56,7 +57,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Mostrar la LandingPage como la ruta principal */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<Home />} />
         <Route
           path="/add-property"
           element={

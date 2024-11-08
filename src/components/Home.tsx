@@ -144,7 +144,12 @@ const PropertyListing = () => {
     <div className={styles.container}>
       <nav className={styles.navbar}>
         <div className={styles.navbarContent}>
-          <h1 className={styles.title}>EstateIQ</h1>
+          <h1 
+            className={styles.title} 
+            onClick={() => navigate('/')}
+          >
+            EstateIQ
+          </h1>
           <button onClick={handleAddPropertyClick} className={styles.addPropertyButton}>
             Agregar una propiedad
           </button>

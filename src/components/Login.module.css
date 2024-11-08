@@ -1,100 +1,124 @@
 .loginContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8f9fa; /* Color de fondo neutro */
-  }
-  
-  .formWrapper {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .title {
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    font-weight: bold;
-    color: #333; /* Color del texto para mantener consistencia */
-  }
-  .successMessage {
-    color: green;
-    font-size: 1.2rem;
-    margin-top: 10px;
-    text-align: center; /* Alinea el texto al centro */
-    font-weight: bold; /* Hace que el mensaje sea más llamativo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+  position: relative;
+}
+
+.backButton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: #f2b333;
+  color: white;
+  border-color: #f2b333;
+}
+
+.formWrapper {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+}
+
+.successMessage {
+  color: green;
+  font-size: 1.2rem;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
 }
 
 .errorMessage {
-    color: red;
-    text-align: center;
-    margin-bottom: 1rem;
-    font-weight: bold; /* Para consistencia con el mensaje de éxito */
+  color: red;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: bold;
 }
-  .form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .inputGroup {
-    margin-bottom: 1.5rem;
-  }
-  
-  .label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    color: #555; /* Color más suave para las etiquetas */
-  }
-  
-  .inputField {
-    width: 100%;
-    padding: 0.75rem;
-    font-size: 1rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-  }
-  
-  .inputField:focus {
-    outline: none;
-    border-color: #f2b333; /* Color de foco adaptado al proyecto */
-    box-shadow: 0 0 3px rgba(242, 179, 51, 0.25);
-  }
-  
-  .loginButton {
-    padding: 0.75rem;
-    font-size: 1rem;
-    background-color: #f2b333; /* Color del proyecto */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .loginButton:hover {
-    background-color: #d49a2b; /* Efecto hover con un tono más oscuro */
-  }
-  
-  .registerLink {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 1rem;
-  }
-  
-  .link {
-    color: #f2b333; /* Adaptado al color del proyecto */
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  
-  .link:hover {
-    color: #d49a2b; /* Color hover para mantener consistencia */
-  }
-  
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+.inputField {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: #f2b333;
+  box-shadow: 0 0 3px rgba(242, 179, 51, 0.25);
+}
+
+.loginButton {
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: #f2b333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.loginButton:hover {
+  background-color: #d49a2b;
+}
+
+.registerLink {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.link {
+  color: #f2b333;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link:hover {
+  color: #d49a2b;
+}
