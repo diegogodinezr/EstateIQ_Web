@@ -135,13 +135,16 @@ const PropertyCard: React.FC<{
     onClose: () => void;
   }> = ({ property, onClose }) => (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="p-6">
-          <button className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full" onClick={onClose}>
+      <div className="bg-white rounded-xl max-w-[80vw] max-h-[80vh] w-full overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="p-6 lg:p-8">
+          <button
+            className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full"
+            onClick={onClose}
+          >
             <X size={24} />
           </button>
-          
-          <div className="flex justify-between items-start mb-6">
+  
+          <div className="flex flex-col lg:flex-row justify-between items-start mb-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <PropertyTypeIcon type={property.propertyType} />
@@ -149,29 +152,34 @@ const PropertyCard: React.FC<{
               </div>
               <div className="flex items-center gap-2 text-gray-600">
                 <MapPin size={16} />
-                <span>{property.calleYNumero}, {property.colonia}, CP {property.codigoPostal}, {property.municipio}, {property.estado}</span>
+                <span>
+                  {property.calleYNumero}, {property.colonia}, CP {property.codigoPostal}, {property.municipio},{' '}
+                  {property.estado}
+                </span>
               </div>
             </div>
-            <div className="text-right">
+            <div className="text-right mt-4 lg:mt-0">
               <div className="text-2xl font-bold text-yellow-500">
                 ${property.price.toLocaleString()}
                 {property.type === 'rent' && '/mes'}
               </div>
-              <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                property.type === 'sale' ? 'bg-yellow-500 text-white' : 'bg-yellow-500 text-white'
-              }`}>
+              <span
+                className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                  property.type === 'sale' ? 'bg-yellow-500 text-white' : 'bg-yellow-500 text-white'
+                }`}
+              >
                 {property.type === 'sale' ? 'Venta' : 'Renta'}
               </span>
             </div>
           </div>
   
-          <img 
-            src={property.images?.length > 0 ? property.images[0] : 'https://via.placeholder.com/800x600'} 
+          <img
+            src={property.images?.length > 0 ? property.images[0] : 'https://via.placeholder.com/800x600'}
             alt={property.title}
-            className="w-full h-96 object-cover rounded-xl mb-6"
+            className="w-full h-64 lg:h-96 object-cover rounded-xl mb-6"
           />
   
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div className="p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-2 mb-1">
                 <Bed size={20} />
@@ -218,8 +226,6 @@ const PropertyCard: React.FC<{
       </div>
     </div>
   );
-  
-
   const LandingPage: React.FC = () => {
     const navigate = useNavigate();
     const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
@@ -276,22 +282,31 @@ const PropertyCard: React.FC<{
                 Encuentra la propiedad de tus sueños
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Descubre miles de propiedades seleccionadas especialmente para ti.
+                Descubre cientos de propiedades seleccionadas especialmente para ti.
               </p>
               <div className="flex gap-4">
-                <button onClick={() => navigate('/home')} className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg font-semibold flex items-center group">
+                <button
+                  onClick={() => navigate('/home')}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-lg font-semibold flex items-center group"
+                >
                   Explorar Propiedades
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
-                <button onClick={() => navigate('/add-property')} className="border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-50 px-8 py-4 rounded-lg font-semibold">
+                <button
+                  onClick={() => navigate('/add-property')}
+                  className="border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-50 px-8 py-4 rounded-lg font-semibold"
+                >
                   Publicar Propiedad
                 </button>
               </div>
             </div>
             <div className="lg:w-1/2 relative rounded-2xl overflow-hidden shadow-2xl">
-              <img src={casaImg} alt="Modern House" className="w-full h-80 object-cover" />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-              </div>
+              <img
+                src={casaImg}
+                alt="Modern House"
+                className="w-full h-80 object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6"></div>
             </div>
           </div>
         </div>
@@ -301,15 +316,15 @@ const PropertyCard: React.FC<{
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="text-center">
-            <div className="text-4xl font-bold text-yellow-500 mb-2">200+</div>
+            <div className="text-4xl font-bold text-yellow-500 mb-2">150+</div>
             <div className="text-gray-600">Propiedades Listadas</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-yellow-500 mb-2">4.8</div>
+            <div className="text-4xl font-bold text-yellow-500 mb-2">4.6</div>
             <div className="text-gray-600">Calificación Promedio</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-yellow-500 mb-2">200+</div>
+            <div className="text-4xl font-bold text-yellow-500 mb-2">180+</div>
             <div className="text-gray-600">Clientes Satisfechos</div>
           </div>
           <div className="text-center">
@@ -325,7 +340,7 @@ const PropertyCard: React.FC<{
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">¿Por qué elegir EstateIQ?</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Nuestra plataforma está diseñada para hacer tu búsqueda de propiedades más fácil y segura
+              Nuestra plataforma está diseñada para hacer tu búsqueda de propiedades más fácil y segura.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -348,69 +363,74 @@ const PropertyCard: React.FC<{
         </div>
       </div>
 
-
-        {/* Featured Properties Section */}
-        <div className="container mx-auto px-4 py-20">
-            <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Propiedades Más Populares</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-                Descubre nuestras propiedades más visitadas seleccionadas especialmente para ti
-            </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-            {featuredProperties.map((property) => (
-                <PropertyCard 
-                key={property._id} 
-                property={property}
-                onViewDetails={handleViewDetails}
-                />
-            ))}
-            </div>
+      {/* Featured Properties Section */}
+      <div className="container mx-auto px-4 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold mb-4">Propiedades Más Populares</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Descubre cientos de propiedades seleccionadas especialmente para ti.
+          </p>
         </div>
-
-        {/* Modal */}
-        {selectedProperty && (
-            <PropertyModal
-            property={selectedProperty}
-            onClose={() => setSelectedProperty(null)}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {featuredProperties.map((property) => (
+            <PropertyCard
+              key={property._id}
+              property={property}
+              onViewDetails={handleViewDetails}
             />
-        )}
+          ))}
+        </div>
+      </div>
 
-      {/* CTA Section */}
-      <div className="bg-yellow-500">
-        <div className="container mx-auto px-4 py-20">
-          <div className="bg-white rounded-2xl p-12 shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-yellow-100 opacity-50 transform -skew-x-12"></div>
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
-              <div className="mb-8 md:mb-0 md:mr-8">
-                <h2 className="text-3xl font-bold mb-4">¿Listo para encontrar tu hogar ideal?</h2>
-                <p className="text-gray-600 text-lg">
-                  Miles de propiedades te esperan. Comienza tu búsqueda ahora y encuentra el lugar perfecto.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={() => navigate('/home')} className="bg-yellow-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-yellow-600 transition-colors">
-                  Explorar Propiedades
-                </button>
-              </div>
+      {/* Modal */}
+      {selectedProperty && (
+        <PropertyModal
+          property={selectedProperty}
+          onClose={() => setSelectedProperty(null)}
+        />
+      )}
+
+
+    {/* CTA Section */}
+    <div className="bg-yellow-500">
+      <div className="container mx-auto px-4 py-20">
+        <div className="bg-white rounded-2xl p-12 shadow-xl">
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
+            <div className="mb-8 md:mb-0 md:mr-8">
+              <h2 className="text-3xl font-bold mb-4">
+                ¿Listo para encontrar tu hogar ideal?
+              </h2>
+              <p className="text-gray-600 text-lg">
+                Cientos de propiedades te esperan. Comienza tu búsqueda ahora y encuentra el lugar perfecto.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={() => navigate('/home')}
+                className="bg-yellow-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-yellow-600 transition-colors"
+              >
+                Explorar Propiedades
+              </button>
             </div>
           </div>
         </div>
       </div>
-
+      </div>
       {/* Testimonials Section */}
       <div className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-4">Lo que dicen nuestros clientes</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Experiencias reales de personas que encontraron su propiedad ideal con EstateIQ
+            Experiencias reales de personas que encontraron su propiedad ideal con EstateIQ.
           </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           <div className="bg-white p-8 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
               <div className="flex text-yellow-500">
-                {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={20} fill="currentColor" />
+                ))}
               </div>
             </div>
             <p className="text-gray-600 mb-6">
@@ -426,7 +446,9 @@ const PropertyCard: React.FC<{
           <div className="bg-white p-8 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
               <div className="flex text-yellow-500">
-                {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={20} fill="currentColor" />
+                ))}
               </div>
             </div>
             <p className="text-gray-600 mb-6">
@@ -442,7 +464,9 @@ const PropertyCard: React.FC<{
           <div className="bg-white p-8 rounded-xl shadow-lg">
             <div className="flex items-center mb-4">
               <div className="flex text-yellow-500">
-                {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={20} fill="currentColor" />
+                ))}
               </div>
             </div>
             <p className="text-gray-600 mb-6">
@@ -471,21 +495,49 @@ const PropertyCard: React.FC<{
             <div>
               <h4 className="text-lg font-semibold mb-4">Enlaces Rápidos</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-yellow-500">Inicio</a></li>
-                <li><a href="#" className="hover:text-yellow-500">Propiedades</a></li>
-                <li><a href="#" className="hover:text-yellow-500">Contacto</a></li>
+                <li>
+                  <a href="#" className="hover:text-yellow-500">
+                    Inicio
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-500">
+                    Propiedades
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-yellow-500">
+                    Contacto
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">Servicios</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#/home" className="hover:text-yellow-500">Comprar</a></li>
-                <li><a href="#/home" className="hover:text-yellow-500">Vender</a></li>
-              <li><a href="#/home" className="hover:text-yellow-500">Rentar</a></li>
-              <li><a href="#/home" className="hover:text-yellow-500">Avalúos</a></li>
-            </ul>
-          </div>
-          <div>
+                <li>
+                  <a href="#/home" className="hover:text-yellow-500">
+                    Comprar
+                  </a>
+                </li>
+                <li>
+                  <a href="#/home" className="hover:text-yellow-500">
+                    Vender
+                  </a>
+                </li>
+                <li>
+                  <a href="#/home" className="hover:text-yellow-500">
+                    Rentar
+                  </a>
+                </li>
+                <li>
+                  <a href="#/home" className="hover:text-yellow-500">
+                    Avalúos
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
             <h4 className="text-lg font-semibold mb-4">Contacto</h4>
             <ul className="space-y-2 text-gray-400">
               <li>contact@estateiq.com</li>
@@ -493,14 +545,14 @@ const PropertyCard: React.FC<{
               <li>Colima, Colima</li>
             </ul>
           </div>
-        </div>
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} EstateIQ. Todos los derechos reservados.</p>
-        </div>
-      </div>
-    </footer>
-  </div>
-);
-};
+          </div>
+          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+            <p>&copy; {new Date().getFullYear()} EstateIQ. Todos los derechos reservados.</p>
+          </div>
+          </div>
+          </footer>
+          </div>
+          );
+          };
 
-export default LandingPage;
+          export default LandingPage;
