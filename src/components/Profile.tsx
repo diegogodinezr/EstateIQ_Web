@@ -207,7 +207,7 @@ const UserProfile = () => {
     <div className={styles.navbar}>
       <div className={styles.navbarContent}>
         <div className={styles.navLeft}>
-          <button onClick={() => navigate('/')} className={styles.backButton}>
+          <button onClick={() => navigate('/home')} className={styles.backButton}>
             <ArrowLeft size={24} />
             <span>Volver</span>
           </button>
