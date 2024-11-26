@@ -1,21 +1,16 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAdminStatistics } from '../api/property';
+
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
   ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line 
 } from 'recharts';
 
-import { DollarSign, Users, Home, Activity, Clock, Trash, MapPin, UserPlus } from 'lucide-react';
+import { DollarSign, Users, Home, Activity, Clock, Trash, MapPin, UserPlus, BarChart2, TrendingUp, House } from 'lucide-react';
 
 
 const COLORS = ['#f2b333', '#f2545b', '#30a46c', '#5c7cfa', '#8884d8', '#82ca9d', '#ffc658'];
-
-const typeMap: { [key: string]: string } = {
-  'Land': 'Terreno',
-  'House': 'Casa',
-  'Apartment': 'Departamento',
-  'Commercial': 'Comercial'
-};
 
 interface StatisticsData {
   totalUsers: number;
@@ -85,8 +80,8 @@ const formatMonth = (monthStr: string) => {
   };
   return months[monthStr.split('-')[1]] || monthStr;
 };
-
 const Statistics = () => {
+  const navigate = useNavigate();
   const [statistics, setStatistics] = useState<StatisticsData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -105,6 +100,21 @@ const Statistics = () => {
 
     fetchStatistics();
   }, []);
+
+  // Navigation handlers
+  const handleHomeClick = () => {
+    navigate('/home');
+  };
+
+  const handleStatisticsClick = () => {
+    // Current page, do nothing or refresh
+    navigate('/statistics');
+  };
+
+  const handleProjectionsClick = () => {
+    // Navigate to projections page
+    navigate('/projections');
+  };
 
   if (loading) {
     return (
@@ -134,28 +144,6 @@ const Statistics = () => {
     month: item._id,
     usuarios: item.count
   }));
-
-  const processAvgPriceData = (data: StatisticsData['avgPriceByTypeAndLocation']): ProcessedPriceData[] => {
-    return data.reduce<ProcessedPriceData[]>((acc, curr) => {
-      const location = curr._id.location;
-      const existingLocationIndex = acc.findIndex(item => item.location === location);
-      
-      if (existingLocationIndex === -1) {
-        acc.push({
-          location,
-          [curr._id.type]: curr.avgPrice,
-          [`${curr._id.type}_translated`]: typeMap[curr._id.type] // Guardamos también el nombre traducido
-        });
-      } else {
-        acc[existingLocationIndex] = {
-          ...acc[existingLocationIndex],
-          [curr._id.type]: curr.avgPrice,
-          [`${curr._id.type}_translated`]: typeMap[curr._id.type]
-        };
-      }
-      return acc;
-    }, []);
-  };
 
   const propertyTypeData = statistics.propertyTypeDistribution.map(item => ({
     name: item._id,
@@ -200,6 +188,33 @@ const Statistics = () => {
   
   return (
     <div className="bg-gray-100 min-h-screen">
+{/* Navigation Bar */}
+    <div className="bg-white shadow-md">
+        <div className="container mx-auto px-4 py-4 flex justify-center space-x-4">
+          <button 
+            onClick={handleHomeClick}
+            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300 focus:outline-none"
+          >
+            <House className="mr-2" />
+            Inicio
+          </button>
+          <button 
+            onClick={handleStatisticsClick}
+            className="flex items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors duration-300 focus:outline-none"
+          >
+            <BarChart2 className="mr-2" />
+            Estadísticas
+          </button>
+          <button 
+            onClick={handleProjectionsClick}
+            className="flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-300 focus:outline-none"
+          >
+            <TrendingUp className="mr-2" />
+            Proyecciones
+          </button>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Estadísticas de EstateIQ</h1>
        {/* Usuarios Registrados por Mes */}
@@ -449,87 +464,6 @@ const Statistics = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-
-          {/* Precio promedio por tipo y ubicación */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-          <h2 className="text-xl font-semibold text-yellow-500 mb-6 flex items-center">
-            <DollarSign className="mr-2" />
-            Precio Promedio por Tipo y Municipio
-          </h2>
-          <div className="h-[500px]"> {/* Aumentar altura para mejor visualización */}
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={processAvgPriceData(statistics.avgPriceByTypeAndLocation)}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 60,
-                  bottom: 120
-                }}
-                barSize={35}
-                barGap={0}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="location"
-                  angle={-45}
-                  textAnchor="end"
-                  height={100}
-                  interval={0}
-                  tick={{
-                    fontSize: 12,
-                    fill: '#666'
-                  }}
-                />
-                <YAxis
-                  tickFormatter={(value) => `$${(value/1000000).toFixed(1)}M`}
-                  label={{
-                    value: 'Precio Promedio (Millones)',
-                    angle: -90,
-                    position: 'insideLeft',
-                    offset: -40,
-                    style: { textAnchor: 'middle' }
-                  }}
-                  tick={{
-                    fontSize: 12,
-                    fill: '#666'
-                  }}
-                />
-                <Tooltip
-                  formatter={(value: number) => [
-                    `$${value.toLocaleString()}`,
-                    'Precio Promedio'
-                  ]}
-                  contentStyle={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px'
-                  }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  height={50}
-                  wrapperStyle={{
-                    paddingTop: '20px'
-                  }}
-                />
-                {Array.from(new Set(statistics.avgPriceByTypeAndLocation.map(item => item._id.type)))
-              .map((type, index) => (
-                <Bar
-                  key={type}
-                  dataKey={type}
-                  name={typeMap[type]} // Usar typeMap aquí
-                  fill={COLORS[index % COLORS.length]}
-                  radius={[4, 4, 0, 0]}
-                />
-              ))}
-          </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
 
           {/* Visitas por ubicación */}
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
