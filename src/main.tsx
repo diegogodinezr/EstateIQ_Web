@@ -7,7 +7,9 @@ import EditProperty from './components/EditProperty';
 import Register from './components/Register';
 import Login from './components/Login';
 import Profile from './components/Profile';
-import Statistics from './components/Statistics'; // Asegúrate de tener este componente
+import Statistics from './components/Statistics'; 
+import Statistics3 from './components/UserStats'; 
+import Statistics2 from './components/PropertyStats'; 
 import './index.css';
 import LandingPage from './components/Landing';
 
@@ -90,6 +92,22 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           element={
             <AdminRoute>
               <Statistics />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/statistics3"
+          element={
+            <AdminRoute>
+              <Statistics3 />
+            </AdminRoute>
+          }
+        />
+          <Route
+          path="/statistics2"
+          element={
+            <AdminRoute>
+              <Statistics2 />
             </AdminRoute>
           }
         />

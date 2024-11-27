@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { getAdminStatistics } from '../api/property';
 
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
   ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line 
 } from 'recharts';
 
-import { DollarSign, Users, Home, Activity, Clock, Trash, MapPin, UserPlus, BarChart2, TrendingUp, House } from 'lucide-react';
-
+import { 
+  DollarSign, Users, Home, Activity, Clock, Trash, 
+  UserPlus, BarChart2, TrendingUp, House, List, Building, UserCircle 
+} from 'lucide-react';
 
 const COLORS = ['#f2b333', '#f2545b', '#30a46c', '#5c7cfa', '#8884d8', '#82ca9d', '#ffc658'];
 
@@ -85,6 +87,7 @@ const Statistics = () => {
   const [statistics, setStatistics] = useState<StatisticsData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'general' | 'propiedades' | 'usuarios'>('general');
 
   useEffect(() => {
     const fetchStatistics = async () => {
@@ -107,13 +110,27 @@ const Statistics = () => {
   };
 
   const handleStatisticsClick = () => {
-    // Current page, do nothing or refresh
     navigate('/statistics');
   };
 
   const handleProjectionsClick = () => {
-    // Navigate to projections page
     navigate('/projections');
+  };
+
+  // New tab navigation handlers
+  const handleGeneralClick = () => {
+    setActiveTab('general');
+    navigate('/statistics');
+  };
+
+  const handlePropertiesClick = () => {
+    setActiveTab('propiedades');
+    navigate('/statistics2');
+  };
+
+  const handleUsersClick = () => {
+    setActiveTab('usuarios');
+    navigate('/statistics3');
   };
 
   if (loading) {
@@ -140,6 +157,7 @@ const Statistics = () => {
     );
   }
 
+
   const monthlyRegistrationData = statistics.usersRegisteredPerMonth.map(item => ({
     month: item._id,
     usuarios: item.count
@@ -150,10 +168,6 @@ const Statistics = () => {
     value: item.count
   }));
 
-  const locationData = statistics.propertiesByLocation.map(loc => ({
-    name: loc._id,
-    value: loc.total,
-  }));
   statistics.avgPriceByTypeAndLocation.reduce<ProcessedPriceData[]>((acc, curr) => {
     const location = curr._id.location;
     const existingLocationIndex = acc.findIndex(item => item.location === location);
@@ -174,12 +188,6 @@ const Statistics = () => {
     return acc;
   }, []);
 
-  const visitsByLocationData = statistics.visitsByLocation.map(item => ({
-    name: item._id,
-    averageVisits: item.averageVisits,
-    totalCompleted: item.totalCompleted
-  }));
-
   const deletedPropertiesData = statistics.deletedPropertiesStats.map(item => ({
     name: item._id,
     value: item.total
@@ -188,35 +196,72 @@ const Statistics = () => {
   
   return (
     <div className="bg-gray-100 min-h-screen">
-{/* Navigation Bar */}
+    {/* Navigation Bar */}
     <div className="bg-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-center space-x-4">
-          <button 
-            onClick={handleHomeClick}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300 focus:outline-none"
-          >
-            <House className="mr-2" />
-            Inicio
-          </button>
-          <button 
-            onClick={handleStatisticsClick}
-            className="flex items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors duration-300 focus:outline-none"
-          >
-            <BarChart2 className="mr-2" />
-            Estadísticas
-          </button>
-          <button 
-            onClick={handleProjectionsClick}
-            className="flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-300 focus:outline-none"
-          >
-            <TrendingUp className="mr-2" />
-            Proyecciones
-          </button>
-        </div>
+      <div className="container mx-auto px-4 py-4 flex justify-center space-x-4">
+        <button 
+          onClick={handleHomeClick}
+          className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300 focus:outline-none"
+        >
+          <House className="mr-2" />
+          Inicio
+        </button>
+        <button 
+          onClick={handleStatisticsClick}
+          className="flex items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors duration-300 focus:outline-none"
+        >
+          <BarChart2 className="mr-2" />
+          Estadísticas
+        </button>
+        <button 
+          onClick={handleProjectionsClick}
+          className="flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-300 focus:outline-none"
+        >
+          <TrendingUp className="mr-2" />
+          Proyecciones
+        </button>
       </div>
+    </div>
+
 
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Estadísticas de EstateIQ</h1>
+         {/* New Statistics Sub-Navigation */}
+         <div className="flex justify-center space-x-4 mb-8">
+          <button 
+            onClick={handleGeneralClick}
+            className={`flex items-center px-6 py-3 rounded-lg shadow-md transition-all duration-300 ${
+              activeTab === 'general' 
+                ? 'bg-yellow-500 text-white' 
+                : 'bg-white text-gray-700 hover:bg-yellow-100'
+            }`}
+          >
+            <List className="mr-2" />
+            Generales
+          </button>
+          <button 
+            onClick={handlePropertiesClick}
+            className={`flex items-center px-6 py-3 rounded-lg shadow-md transition-all duration-300 ${
+              activeTab === 'propiedades' 
+                ? 'bg-yellow-500 text-white' 
+                : 'bg-white text-gray-700 hover:bg-yellow-100'
+            }`}
+          >
+            <Building className="mr-2" />
+            Propiedades
+          </button>
+          <button 
+            onClick={handleUsersClick}
+            className={`flex items-center px-6 py-3 rounded-lg shadow-md transition-all duration-300 ${
+              activeTab === 'usuarios' 
+                ? 'bg-yellow-500 text-white' 
+                : 'bg-white text-gray-700 hover:bg-yellow-100'
+            }`}
+          >
+            <UserCircle className="mr-2" />
+            Usuarios
+          </button>
+        </div>
        {/* Usuarios Registrados por Mes */}
         <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 mb-8">
           <h2 className="text-xl font-semibold text-yellow-500 mb-4 flex items-center">
@@ -444,100 +489,8 @@ const Statistics = () => {
             </ul>
           </div>
         </div>
-
-        {/* Gráficos de ancho completo */}
-        <div className="mt-8 space-y-8">
-          {/* Propiedades por ubicación */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-semibold text-yellow-500 mb-4 flex items-center">
-              <MapPin className="mr-2" />
-              Propiedades por Municipio
-            </h2>
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={locationData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="value" fill="#f2b333" name="Cantidad de propiedades" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Visitas por ubicación */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-semibold text-yellow-500 mb-4">Visitas por Municipio</h2>
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={visitsByLocationData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis yAxisId="left" orientation="left" stroke="#f2b333" />
-                <YAxis yAxisId="right" orientation="right" stroke="#f2545b" />
-                <Tooltip />
-                <Legend />
-                <Bar yAxisId="left" dataKey="averageVisits" fill="#f2b333" name="Visitas promedio" />
-                <Bar yAxisId="right" dataKey="totalCompleted" fill="#f2545b" name="Total completadas" />
-                </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Usuarios más activos */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-semibold text-yellow-500 mb-4">Usuarios Más Activos</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Propiedades Publicadas
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {statistics.mostActiveUsers.map((user) => (
-                    <tr key={user.email}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.propertyCount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Propiedades más vistas */}
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h2 className="text-xl font-semibold text-yellow-500 mb-4">Propiedades Más Vistas</h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Título
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Vistas
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {statistics.mostViewedProperties.map((property) => (
-                    <tr key={property.title}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{property.title}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{property.views}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 };
 
