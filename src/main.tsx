@@ -10,6 +10,7 @@ import Profile from './components/Profile';
 import Statistics from './components/Statistics'; 
 import Statistics3 from './components/UserStats'; 
 import Statistics2 from './components/PropertyStats'; 
+import Proyections from './components/Proyections';
 import './index.css';
 import LandingPage from './components/Landing';
 
@@ -108,6 +109,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           element={
             <AdminRoute>
               <Statistics2 />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/projections"
+          element={
+            <AdminRoute>
+              <Proyections />
             </AdminRoute>
           }
         />
